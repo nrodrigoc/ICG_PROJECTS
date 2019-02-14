@@ -64,10 +64,10 @@ void drawLine(Vertice pixel1, Vertice pixel2, RGBA cor1, RGBA cor2){
         return;
     }
 
-    /*if(dx == 0){
+    if(dx == 0){
         noIncLine(pixel1, pixel2, cor1, cor2);
         return;
-    }*/
+    }
 
     if(dy<0){
         inclinacao = -1;
