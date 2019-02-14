@@ -124,9 +124,20 @@ void desenhar(){
     Vertice p3 = {100, 50};
     RGBA cor = {255, 0, 0, 255};
 
+    //triangulo1
     drawLine(p1, p2, cor, cor);
     drawLine(p1, p3, cor, cor);
     drawLine(p2, p3, cor, cor);
+
+    //triangulo2
+    Vertice p4 = {200, 300};
+    Vertice p5 = {400, 200};
+    Vertice p6 = {200, 250};
+
+    drawLine(p4, p5, cor, cor);
+    drawLine(p4, p6, cor, cor);
+    drawLine(p5, p6, cor, cor);
+
 }
 
 
