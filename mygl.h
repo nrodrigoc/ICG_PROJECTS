@@ -121,8 +121,8 @@ void drawLine(Vertice pixel1, Vertice pixel2, RGBA cor1, RGBA cor2){
 void desenhar(){
     Vertice p1 = {5, 50};
     Vertice p2 = {50, 5};
-    Vertice p3 = {100, 60};
-    RGBA cor = {255, 255, 255, 255};
+    Vertice p3 = {100, 50};
+    RGBA cor = {255, 0, 0, 255};
 
     drawLine(p1, p2, cor, cor);
     drawLine(p1, p3, cor, cor);
