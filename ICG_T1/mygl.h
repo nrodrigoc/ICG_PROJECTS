@@ -35,7 +35,7 @@ void putPixel(Vertice pixel, RGBA cor){
 
 }
 
-//Em caso de retas verticais
+//Em caso de retas verticais ou horizontais
 void noIncLine(Vertice p1, Vertice p2, RGBA c1, RGBA c2){
     putPixel(p1, c1);
     if(p1.x == p2.x){
@@ -168,6 +168,15 @@ void desenhar(){
     drawLine(p4, p5, cor);
     drawLine(p4, p6, cor);
     drawLine(p5, p6, cor);
+
+    //Triangulo3
+    Vertice p7 = {60, 100};
+    Vertice p8 = {200, 400};
+    Vertice p9 = {400, 200};
+
+    drawLine(p7, p8, cor);
+    drawLine(p7, p9, cor);
+    drawLine(p8, p9, cor);
 }
 
 
