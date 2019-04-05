@@ -36,11 +36,11 @@ void putPixel(Vertice pixel, RGBA cor){
 }
 
 //Em caso de retas verticais ou horizontais
-void noIncLine(Vertice p1, Vertice p2, RGBA c1, RGBA c2){
+void noIncLine(Vertice p1, Vertice p2, RGBA c1){
     putPixel(p1, c1);
     if(p1.x == p2.x){
         if(p2.y < p1.y){
-            noIncLine(p2, p1, c2, c1);
+            noIncLine(p2, p1, c1);
             return;
         }
         while(p1.y != p2.y){
@@ -49,7 +49,7 @@ void noIncLine(Vertice p1, Vertice p2, RGBA c1, RGBA c2){
         }
     }else{
         if(p2.x < p1.x){
-            noIncLine(p2, p1, c2, c1);
+            noIncLine(p2, p1, c1);
             return;
         }
         while(p1.x != p2.x){
@@ -70,7 +70,7 @@ void drawLine(Vertice pixel1, Vertice pixel2, RGBA cor){
     int inclinacao = 1;
 
     if(dx == 0 || dy == 0){
-        noIncLine(pixel1, pixel2, cor, cor);
+        noIncLine(pixel1, pixel2, cor);
         return;
     }
 
