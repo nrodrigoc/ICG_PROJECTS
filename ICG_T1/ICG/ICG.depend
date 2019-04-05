@@ -31,3 +31,19 @@
 1550109575 c:\users\nrodrigo\documents\github\icg_t1\mygl.h
 	"definitions.h"
 
+1554400688 source:c:\users\nrodrigo\documents\github\icg_projects\icg_t1\main.cpp
+	"main.h"
+
+1554422062 c:\users\nrodrigo\documents\github\icg_projects\icg_t1\main.h
+	<GL/gl.h>
+	<GL/glu.h>
+	<GL/glut.h>
+	<iostream>
+	"definitions.h"
+	"mygl.h"
+
+1554400688 c:\users\nrodrigo\documents\github\icg_projects\icg_t1\definitions.h
+
+1554436375 c:\users\nrodrigo\documents\github\icg_projects\icg_t1\mygl.h
+	"definitions.h"
+
