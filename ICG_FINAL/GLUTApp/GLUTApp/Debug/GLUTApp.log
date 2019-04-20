@@ -1,0 +1,5 @@
+﻿  main.cpp
+c:\users\nrodrigo\desktop\inferno\glutapp\glutapp\main.cpp(28): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nrodrigo\desktop\inferno\glutapp\glutapp\main.cpp(195): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\desktop\inferno\glutapp\glutapp\main.cpp(237): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+  GLUTApp.vcxproj -> C:\Users\nrodrigo\Desktop\INFERNO\GLUTApp\Debug\GLUTApp.exe
