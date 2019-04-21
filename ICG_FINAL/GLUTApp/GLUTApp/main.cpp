@@ -12,11 +12,18 @@ float lx = 0.0f, lz = -1.0f;
 float x = 0.0f, y = 1.f, z = 5.0f;
 // the key states. These variables will be zero
 //when no key is being presses
-float deltaAngle = 0.0f;
+float deltaAngle = 0.f;
 float deltaMove = 0;
 int xOrigin = -1;
 
 int mainWindow;
+
+//Lights
+PointLight pointlight;
+GLfloat globalAmbient = 0.3f;
+
+//Camera
+Camera camera;
 
 void changeSize(int w, int h) {
 
@@ -42,6 +49,7 @@ void changeSize(int w, int h) {
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
 }
+
 
 // file_name contém o nome do arquivo a ser carregado
 int loadMesh(const std::string &file_name)
@@ -82,33 +90,6 @@ int loadMesh(const std::string &file_name)
 		}
 	}
 	return EXIT_SUCCESS;
-}
-
-void drawSnowMan() {
-
-	glColor3f(1.0f, 1.0f, 1.0f);
-
-	// Draw Body
-	glTranslatef(0.0f, 0.75f, 0.0f);
-	glutSolidSphere(0.75f, 20, 20);
-
-	// Draw Head
-	glTranslatef(0.0f, 1.0f, 0.0f);
-	glutSolidSphere(0.25f, 20, 20);
-
-	// Draw Eyes
-	glPushMatrix();
-	glColor3f(0.0f, 0.0f, 0.0f);
-	glNormal3f(0.f, 1.f, 1.f);
-	glTranslatef(0.05f, 0.10f, 0.18f);
-	glutSolidSphere(0.05f, 10, 10);
-	glTranslatef(-0.1f, 0.0f, 0.0f);
-	glutSolidSphere(0.05f, 10, 10);
-	glPopMatrix();
-
-	// Draw Nose
-	glColor3f(1.0f, 0.5f, 0.5f);
-	glutSolidCone(0.08f, 0.7f, 10, 2);
 }
 		
 void computePos(float deltaMove) 
@@ -155,10 +136,44 @@ void mouseMove(int x, int y) {
 	}
 }
 
-void renderScene(void) {
+void drawSnowMan() {
+
+	glPushMatrix();
+	glEnable(GL_COLOR_MATERIAL);
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	// Draw Body	
+	glTranslatef(0.0f, 0.75f, 0.0f);
+	glutSolidSphere(0.75f, 20, 20);
+
+	// Draw Head
+	glTranslatef(0.0f, 1.0f, 0.0f);
+	glutSolidSphere(0.25f, 20, 20);
+	
+	// Draw Eyes
+	glPushMatrix();
+	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
+	glTranslatef(0.05f, 0.10f, 0.18f);
+	glutSolidSphere(0.05f, 10, 10);
+	glTranslatef(-0.1f, 0.0f, 0.0f);
+	glutSolidSphere(0.05f, 10, 10);
+	glPopMatrix();
+
+	// Draw Nose
+	glColor4f(1.0f, 0.5f, 0.5f, 1.0f);
+	glutSolidCone(0.08f, 0.5f, 10, 2);
+	glDisable(GL_COLOR_MATERIAL);
+	glPopMatrix();
+}
+
+
+void display(void) {
 
 	// Clear Color and Depth Buffers
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 
 	if (deltaMove)
 		computePos(deltaMove);
@@ -168,15 +183,25 @@ void renderScene(void) {
 	// Reset transformations
 	glLoadIdentity();
 
+	GLfloat globalAmbientVec[4] = { globalAmbient, globalAmbient, globalAmbient, 1.0 };
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientVec);
+
 	// Set the camera
-	gluLookAt(	
+	gluLookAt(
 		x, 1.0f, z,
 		x + lx, 1.0f, z + lz,
 		0.0f, 1.0f, 0.0f
 	);
 
+	glPushMatrix();
+	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
+	pointlight.addLight();
+	glPopMatrix();
+
+
 	// Draw ground
-	glColor3f(0.9f, 0.9f, 0.9f);
+	GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 	glBegin(GL_QUADS);
 		glVertex3f(-100.0f, 0.f, -100.0f);
 		glVertex3f(-100.0f, 0.f, 100.0f);
@@ -184,10 +209,7 @@ void renderScene(void) {
 		glVertex3f(100.0f, 0.f, -100.0f);
 	glEnd();
 
-
-	//loadMesh("Objects/capacete.obj");
-
-
+	//loadMesh("./Objects/macaca.obj");
 	// Draw 36 SnowMen
 	for (int i = -3; i < 3; i++)
 		for (int j = -3; j < 3; j++) {
@@ -203,10 +225,10 @@ void renderScene(void) {
 void pressKey(int key, int xx, int yy) {
 
 	switch (key) {
-		case GLUT_KEY_LEFT: deltaAngle = -0.005f; break;
-		case GLUT_KEY_RIGHT: deltaAngle = 0.005f; break;
-		case GLUT_KEY_UP: deltaMove = 0.5f; break;
-		case GLUT_KEY_DOWN: deltaMove = -0.5f; break;
+	case GLUT_KEY_LEFT: deltaAngle = -0.005f; break;
+	case GLUT_KEY_RIGHT: deltaAngle = 0.005f; break;
+	case GLUT_KEY_UP: deltaMove = 0.5f; break;
+	case GLUT_KEY_DOWN: deltaMove = -0.5f; break;
 	}
 }
 
@@ -226,30 +248,11 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 		exit(0);
 }
 
-void light() {
-	// Lighting set up
-	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-
-	// Set lighting intensity and color
-	GLfloat qaAmbientLight[] = { 1.0, 1.0, 1.0, 1.0 };
-	GLfloat qaDiffuseLight[] = { 0.8, 0.8, 0.8, 1.0 };
-	GLfloat qaSpecularLight[] = { 1.0, 1.0, 1.0, 1.0 };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, qaAmbientLight);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, qaDiffuseLight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, qaSpecularLight);
-
-	// Set the light position
-	GLfloat qaLightPosition[] = { 1, 1, 1, 1.0 };
-	glLightfv(GL_LIGHT0, GL_POSITION, qaLightPosition);
-}
-
 
 void init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-
+	//glFrontFace(GL_CW);
 
 	// register callbacks
 	glutIgnoreKeyRepeat(1);
@@ -259,8 +262,6 @@ void init() {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
-	//light();
-
 }
 
 
@@ -269,19 +270,26 @@ int main(int argc, char **argv) {
 
 	// init GLUT and create window
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
+	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_STENCIL);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(800, 800);
 	mainWindow = glutCreateWindow("JANELINHA");
 
 	// register callbacks
-	glutDisplayFunc(renderScene);
+	glutDisplayFunc(display);
 	glutReshapeFunc(changeSize);
-	glutIdleFunc(renderScene);
+	glutIdleFunc(display);
 	init();
 
 	// OpenGL init
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	glEnable(GL_NORMALIZE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	pointlight.enable();
 
 	// enter GLUT event processing cycle
 	glutMainLoop();

@@ -15,5 +15,8 @@
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 
+#include "PointLight.h"
+#include "Camera.h"
+
 
 #endif // ! _LIBS_H_
