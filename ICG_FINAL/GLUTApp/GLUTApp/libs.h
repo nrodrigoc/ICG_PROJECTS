@@ -1,6 +1,8 @@
 #ifndef  _LIBS_H_
+#define _LIBS_H_
 
-#include <Windows.h>
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>

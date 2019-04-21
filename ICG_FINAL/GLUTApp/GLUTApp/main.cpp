@@ -37,6 +37,8 @@ int mainMenu;
 bool start = false;
 const void* font = GLUT_BITMAP_TIMES_ROMAN_24;
 
+void mouseButton(int button, int state, int x, int y);
+
 void changeSize(int width, int heigth) {
 
 	w = width;
@@ -92,8 +94,7 @@ void deleteModels() {
 	for (int i = 0; i < models.size(); i++)
 		delete models[i];
 }
-
-		
+	
 void computePos(float deltaMove) 
 {
 	x += deltaMove * lx * 0.1f;
@@ -105,22 +106,6 @@ void computeDir(float deltaAngle) {
 	angle += deltaAngle;
 	lx = sin(angle);
 	lz = -cos(angle);
-}
-
-void mouseButton(int button, int state, int x, int y) {
-
-	// only start motion if the left button is pressed
-	if (button == GLUT_LEFT_BUTTON) {
-
-		// when the button is released
-		if (state == GLUT_UP) {
-			angle += deltaAngle;
-			xOrigin = -1;
-		}
-		else {// state = GLUT_DOWN
-			xOrigin = x;
-		}
-	}
 }
 
 void mouseMove(int x, int y) {
@@ -305,7 +290,6 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 		exit(0);
 }
 
-
 void init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -320,7 +304,6 @@ void init() {
 	glutMotionFunc(mouseMove);
 
 	initModels();
-
 }
 
 void processMenuEvents(int option) {
@@ -333,6 +316,14 @@ void processMenuEvents(int option) {
 		exit(0);
 	}
 	glFlush();
+}
+
+void mouseButton(int button, int state, int x, int y) {
+
+	// only start motion if the left button is pressed
+	if (button == GLUT_RIGHT_BUTTON) {
+		start = true;
+	}
 }
 
 void createGLUTMenus() {
