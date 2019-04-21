@@ -1,11 +1,11 @@
-#include "libs.h"
+﻿#include "libs.h"
 
 // all variables initialized to 1.0, meaning
 // the triangle will initially be white
 //float red = 1.0f, blue = 1.0f, green = 1.0f;
 
 // angle of rotation for the camera direction
-float angle = 0.0f;
+float angle = 0.0f, angleM = 0.f;
 // actual vector representing the camera's direction
 float lx = 0.0f, lz = -1.0f;
 // XZ position of the camera
@@ -24,6 +24,9 @@ GLfloat globalAmbient = 0.3f;
 
 //Camera
 Camera camera;
+
+//Models
+vector<Model*> models;
 
 void changeSize(int w, int h) {
 
@@ -50,47 +53,36 @@ void changeSize(int w, int h) {
 	glMatrixMode(GL_MODELVIEW);
 }
 
+void initModels() {
+	Model *myModel = new Model;
+	if(!myModel->importModel("Objects/carrinho.obj"))
+		cout << "Import model error!" << endl;
 
-// file_name cont�m o nome do arquivo a ser carregado
-int loadMesh(const std::string &file_name)
-{
-	std::ifstream fin(file_name.c_str());
-	if (!fin.fail())
-		fin.close();
-	else
-	{
-		std::cerr << "Couldn't open file: " << file_name << std::endl;
-		return EXIT_FAILURE;
-	}
-
-	Assimp::Importer importer;
-
-	const aiScene *assimp_scene_ = importer.ReadFile(file_name,
-		aiProcess_Triangulate);
-	if (!assimp_scene_)
-	{
-		std::cerr << importer.GetErrorString() << std::endl;
-		return EXIT_FAILURE;
-	}
-	if (assimp_scene_->HasMeshes())
-	{
-		for (unsigned int mesh_id = 0; mesh_id < assimp_scene_->mNumMeshes; mesh_id++)
-		{
-			const aiMesh *mesh_ptr = assimp_scene_->mMeshes[mesh_id];
-			for (unsigned int vertex_id = 0; vertex_id < mesh_ptr->mNumVertices;
-				vertex_id += 3)
-			{
-				const aiVector3D *vertex_ptr = &mesh_ptr->mVertices[vertex_id];
-				glm::dvec3 v0{ vertex_ptr[0].x, vertex_ptr[0].y, vertex_ptr[0].z };
-				glm::dvec3 v1{ vertex_ptr[1].x, vertex_ptr[1].y, vertex_ptr[1].z };
-				glm::dvec3 v2{ vertex_ptr[2].x, vertex_ptr[2].y, vertex_ptr[2].z };
-				// ---> Aqui voc� salva os v�rtices V0, V1 e V2 do
-				// �--> tri�ngulo na sua estrutura de dados!!!
-			}
-		}
-	}
-	return EXIT_SUCCESS;
+	models.push_back(myModel);
 }
+
+void drawModels()
+{
+	for (int i = 0; i < models.size(); i++) {
+		glPushMatrix();
+
+		// 设置模板缓冲为可写状态，把较小的面包放入模板缓冲（设为1）
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+
+		glTranslatef(15.0, 1, 10.0);
+		glRotatef(angleM, 0.f, 1.f, 0.f);
+		glScalef(5.f, 5.f, 5.f);
+		models[i]->renderTheModel(0.5f, false);
+		glPopMatrix();
+	}
+}
+
+void deleteModels() {
+	for (int i = 0; i < models.size(); i++)
+		delete models[i];
+}
+
 		
 void computePos(float deltaMove) 
 {
@@ -209,7 +201,10 @@ void display(void) {
 		glVertex3f(100.0f, 0.f, -100.0f);
 	glEnd();
 
-	//loadMesh("./Objects/macaca.obj");
+	//Draw Models
+	drawModels();
+	angleM += 0.1f;
+
 	// Draw 36 SnowMen
 	for (int i = -3; i < 3; i++)
 		for (int j = -3; j < 3; j++) {
@@ -262,6 +257,8 @@ void init() {
 	glutMouseFunc(mouseButton);
 	glutMotionFunc(mouseMove);
 
+	initModels();
+
 }
 
 
@@ -275,7 +272,7 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(800, 800);
 	mainWindow = glutCreateWindow("JANELINHA");
-
+	
 	// register callbacks
 	glutDisplayFunc(display);
 	glutReshapeFunc(changeSize);
@@ -294,5 +291,6 @@ int main(int argc, char **argv) {
 	// enter GLUT event processing cycle
 	glutMainLoop();
 
+	deleteModels();
 	return 1;
 }
