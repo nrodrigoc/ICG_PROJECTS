@@ -1,5 +1,7 @@
 ﻿#include "libs.h"
 
+using namespace std;
+
 // all variables initialized to 1.0, meaning
 // the triangle will initially be white
 //float red = 1.0f, blue = 1.0f, green = 1.0f;
@@ -17,6 +19,7 @@ float deltaMove = 0;
 int xOrigin = -1;
 
 int mainWindow;
+int w, h;
 
 //Lights
 PointLight pointlight;
@@ -28,8 +31,16 @@ Camera camera;
 //Models
 vector<Model*> models;
 
-void changeSize(int w, int h) {
+//Menu veriables
+char s[300]; //Guardar o texto;
+int mainMenu;
+bool start = false;
+const void* font = GLUT_BITMAP_TIMES_ROMAN_24;
 
+void changeSize(int width, int heigth) {
+
+	w = width;
+	h = heigth;
 	// Prevent a divide by zero, when window is too short
 	// (you cant make a window of zero width).
 	if (h == 0)
@@ -54,7 +65,7 @@ void changeSize(int w, int h) {
 }
 
 void initModels() {
-	Model *myModel = new Model;
+	Model *myModel = new Model();
 	if(!myModel->importModel("Objects/carrinho.obj"))
 		cout << "Import model error!" << endl;
 
@@ -66,7 +77,6 @@ void drawModels()
 	for (int i = 0; i < models.size(); i++) {
 		glPushMatrix();
 
-		// 设置模板缓冲为可写状态，把较小的面包放入模板缓冲（设为1）
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
@@ -158,6 +168,29 @@ void drawSnowMan() {
 	glPopMatrix();
 }
 
+void setOrthographiProjection(){
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, w,0,h);
+	glScalef(1, -1, 1);
+	glTranslatef(0, -h, 0);
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void resetPerspectiveProjection(){
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void renderBitmapString(float x, float y, void *font, const char *string){
+	const char *c;
+	glRasterPos2f(x,y);
+	for(c = string; *c != '\0'; c++){
+		glutBitmapCharacter(font, *c);
+	}
+}
 
 void display(void) {
 
@@ -217,6 +250,35 @@ void display(void) {
 	glutSwapBuffers();
 }
 
+void MenuText(void){
+
+	if(!start){
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glColor3d(1.0, 1.0, 1.0);
+		setOrthographiProjection();
+		glPushMatrix();
+		glLoadIdentity();
+		sprintf(s, "SPEED");
+		renderBitmapString(350, 100, (void *) font, s);
+		sprintf(s, "Up arrow - accelerates");
+		renderBitmapString(260, 300, (void *) font, s);
+		sprintf(s, "Down arrow - break");
+		renderBitmapString(260, 350, (void *) font, s);
+		sprintf(s, "Left arrow - turn left");
+		renderBitmapString(260, 400, (void *) font, s);
+		sprintf(s, "Right arrow - turns right");
+		renderBitmapString(260, 450, (void *) font, s);
+		sprintf(s, "Click on the right button to start");
+		renderBitmapString(300, 700, GLUT_BITMAP_HELVETICA_12, s);
+		glPopMatrix();
+		resetPerspectiveProjection();
+		glutSwapBuffers();
+	}
+	else{
+		display();
+	}
+}
+
 void pressKey(int key, int xx, int yy) {
 
 	switch (key) {
@@ -261,7 +323,33 @@ void init() {
 
 }
 
+void processMenuEvents(int option) {
 
+	if(option != 0){
+		start = true;
+	}
+	else{
+		glutDestroyWindow(mainWindow);
+		exit(0);
+	}
+	glFlush();
+}
+
+void createGLUTMenus() {
+
+	// create the menu and
+	// tell glut that "processMenuEvents" will
+	// handle the events
+
+	mainMenu = glutCreateMenu(processMenuEvents);
+	//add entries to our menu
+	glutAddMenuEntry("Start",1);
+	glutAddMenuEntry("Exit",0);
+	glutAddMenuEntry("Help", 2);
+
+	// attach the menu to the right button
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
 
 int main(int argc, char **argv) {
 
@@ -274,9 +362,13 @@ int main(int argc, char **argv) {
 	mainWindow = glutCreateWindow("JANELINHA");
 	
 	// register callbacks
-	glutDisplayFunc(display);
+	/*glutDisplayFunc(display);
 	glutReshapeFunc(changeSize);
-	glutIdleFunc(display);
+	glutIdleFunc(display);*/
+	//Aparecer menu
+	glutDisplayFunc(MenuText);
+	glutReshapeFunc(changeSize);
+	glutIdleFunc(MenuText);
 	init();
 
 	// OpenGL init
