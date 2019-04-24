@@ -77,6 +77,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)/../External Libraries/GLM/include;$(SolutionDir)/../External Libraries/assimp/include;$(SolutionDir)/../External Libraries/GLUT/include/GL;$(SolutionDir)/../External Libraries/GLEW/include/GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)/../External Libraries/assimp/lib;$(SolutionDir)/../External Libraries/GLEW/lib/Release/Win32;$(SolutionDir)/../External Libraries/GLUT/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>

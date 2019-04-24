@@ -1,49 +1,69 @@
-#pragma once
+Ôªø#pragma once
 
-#ifndef MODEL_H  
-#define MODEL_H 
+#include <stdio.h>
+#include <glew.h>  
+#include <freeglut.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include <fstream>
-#include <iostream>
-#include <string.h>
+#include <stdlib.h>
+
+//to map image filenames to textureIds
+#include <string>
 #include <map>
-
-#include <freeglut.h>
-
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
+#include <iostream>
 
 
-using namespace std;
+// assimp include files. These three are usually needed.
+#include "assimp/Importer.hpp"	//OO version Header!
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
+#include "assimp/DefaultLogger.hpp"
+#include "assimp/LogStream.hpp"
 
-class Model {
+
+class Model
+{
 public:
-	Model();
+
+	Model(std::string fileName);
 	~Model();
+	void renderTheModel();
+	bool importModel();
 
-	bool importModel(const string& pFile);        //º”‘ÿƒ£–Õ
 
-	void renderTheModel(float scale, bool isAmbient);             //‰÷»æƒ£–Õ»Îø⁄
-
-private:
-	//º”‘ÿtexture
-	//bool loadTextures(const aiScene* scene, const string modelPath);
-
-	//µ›πÈ‰÷»æƒ£–Õ
-	void recursiveRender(const struct aiScene *sc, const struct aiNode* nd, float scale, bool isAmbient);
-
-	//∏¯ƒ£–ÕÃÌº”texture
-	void applyMaterial(const aiMaterial *mtl, bool isAmbient);
+protected:
 
 private:
+	void recursive_render(const struct aiScene *sc, const struct aiNode* nd, float scale);
+	void apply_material(const aiMaterial *mtl);
+	void color4_to_float4(const aiColor4D *c, float f[4]);
+	void set_float4(float f[4], float a, float b, float c, float d);
+	void Color4f(const aiColor4D *color);
+
+	// The default hard-coded path. Can be overridden by supplying a path through the command line.
+	std::string modelpath;
+
+	GLfloat		xrot;
+	GLfloat		yrot;
+	GLfloat		zrot;
+
+	GLfloat LightAmbient[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+	GLfloat LightDiffuse[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLfloat LightPosition[4] = { 0.0f, 0.0f, 15.0f, 1.0f };
+
+
+	// the global Assimp scene object
 	const aiScene* scene = NULL;
 	GLuint scene_list = 0;
 	aiVector3D scene_min, scene_max, scene_center;
 
-	map<string, GLuint*> textureIdMap;    // map image filenames to textureIds
-	GLuint* textureIds;					  // pointer to texture Array
+	// images / texture
+	std::map<std::string, GLuint*> textureIdMap;	// map image filenames to textureIds
+	GLuint*		textureIds;							// pointer to texture Array
+
+													// Create an instance of the Importer class
+	Assimp::Importer importer;
 
 };
-
-#endif

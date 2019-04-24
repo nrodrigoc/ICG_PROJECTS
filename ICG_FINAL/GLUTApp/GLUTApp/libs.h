@@ -1,15 +1,16 @@
 #ifndef  _LIBS_H_
-#define _LIBS_H_
+#define	_LIBS_H_
 
-#define _CRT_SECURE_NO_WARNINGS
+#define _CTR_SECURE_NO_WARNINGS
 
 #include <iostream>
+#include <vector>
 #include <fstream>
 #include <stdlib.h>
+#include <glew.h>
 #include <freeglut.h>
 
 #include <glm.hpp>
-#include <vector>
 #include <vec2.hpp>
 #include <vec3.hpp>
 #include <vec4.hpp>

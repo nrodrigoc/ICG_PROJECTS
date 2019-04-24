@@ -2,9 +2,7 @@
 
 using namespace std;
 
-// all variables initialized to 1.0, meaning
-// the triangle will initially be white
-//float red = 1.0f, blue = 1.0f, green = 1.0f;
+#define RED_CAR "Objects/carrinho2.obj"
 
 // angle of rotation for the camera direction
 float angle = 0.0f, angleM = 0.f;
@@ -22,20 +20,21 @@ int mainWindow;
 int w, h;
 
 //Lights
-PointLight pointlight;
+PointLight pointlight(0, 5, 0);
 GLfloat globalAmbient = 0.3f;
 
 //Camera
 Camera camera;
 
 //Models
-vector<Model*> models;
+std::vector<Model*> models;
 
 //Menu veriables
 char s[300]; //Guardar o texto;
 int mainMenu;
 bool start = false;
 const void* font = GLUT_BITMAP_TIMES_ROMAN_24;
+
 
 void mouseButton(int button, int state, int x, int y);
 
@@ -67,9 +66,9 @@ void changeSize(int width, int heigth) {
 }
 
 void initModels() {
-	Model *myModel = new Model();
-	if(!myModel->importModel("Objects/carrinho.obj"))
-		cout << "Import model error!" << endl;
+	Model *myModel = new Model(RED_CAR);
+	if(!myModel->importModel())
+		std::cout << "Import model error!" << std::endl;
 
 	models.push_back(myModel);
 }
@@ -79,13 +78,14 @@ void drawModels()
 	for (int i = 0; i < models.size(); i++) {
 		glPushMatrix();
 
+		// 设置模板缓冲为可写状态，把较小的面包放入模板缓冲（设为1）
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
-		glTranslatef(15.0, 1, 10.0);
+		glTranslatef(0, 0.5, 0.0);
 		glRotatef(angleM, 0.f, 1.f, 0.f);
 		glScalef(5.f, 5.f, 5.f);
-		models[i]->renderTheModel(0.5f, false);
+		models[i]->renderTheModel();
 		glPopMatrix();
 	}
 }
@@ -94,7 +94,7 @@ void deleteModels() {
 	for (int i = 0; i < models.size(); i++)
 		delete models[i];
 }
-	
+		
 void computePos(float deltaMove) 
 {
 	x += deltaMove * lx * 0.1f;
@@ -153,26 +153,26 @@ void drawSnowMan() {
 	glPopMatrix();
 }
 
-void setOrthographiProjection(){
+void setOrthographiProjection() {
 	glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	gluOrtho2D(0, w,0,h);
+	gluOrtho2D(0, w, 0, h);
 	glScalef(1, -1, 1);
 	glTranslatef(0, -h, 0);
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void resetPerspectiveProjection(){
+void resetPerspectiveProjection() {
 	glMatrixMode(GL_PROJECTION);
 	glPopMatrix();
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void renderBitmapString(float x, float y, void *font, const char *string){
+void renderBitmapString(float x, float y, void *font, const char *string) {
 	const char *c;
-	glRasterPos2f(x,y);
-	for(c = string; *c != '\0'; c++){
+	glRasterPos2f(x, y);
+	for (c = string; *c != '\0'; c++) {
 		glutBitmapCharacter(font, *c);
 	}
 }
@@ -224,44 +224,15 @@ void display(void) {
 	angleM += 0.1f;
 
 	// Draw 36 SnowMen
-	for (int i = -3; i < 3; i++)
+	/*for (int i = -3; i < 3; i++)
 		for (int j = -3; j < 3; j++) {
 			glPushMatrix();
 			glTranslatef(i*10.0, 0, j * 10.0);
 			drawSnowMan();
 			glPopMatrix();
-		}
+		}*/
 
 	glutSwapBuffers();
-}
-
-void MenuText(void){
-
-	if(!start){
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glColor3d(1.0, 1.0, 1.0);
-		setOrthographiProjection();
-		glPushMatrix();
-		glLoadIdentity();
-		sprintf(s, "SPEED");
-		renderBitmapString(350, 100, (void *) font, s);
-		sprintf(s, "Up arrow - accelerates");
-		renderBitmapString(260, 300, (void *) font, s);
-		sprintf(s, "Down arrow - break");
-		renderBitmapString(260, 350, (void *) font, s);
-		sprintf(s, "Left arrow - turn left");
-		renderBitmapString(260, 400, (void *) font, s);
-		sprintf(s, "Right arrow - turns right");
-		renderBitmapString(260, 450, (void *) font, s);
-		sprintf(s, "Click on the right button to start");
-		renderBitmapString(300, 700, GLUT_BITMAP_HELVETICA_12, s);
-		glPopMatrix();
-		resetPerspectiveProjection();
-		glutSwapBuffers();
-	}
-	else{
-		display();
-	}
 }
 
 void pressKey(int key, int xx, int yy) {
@@ -271,6 +242,35 @@ void pressKey(int key, int xx, int yy) {
 	case GLUT_KEY_RIGHT: deltaAngle = 0.005f; break;
 	case GLUT_KEY_UP: deltaMove = 0.5f; break;
 	case GLUT_KEY_DOWN: deltaMove = -0.5f; break;
+	}
+}
+
+void MenuText(void) {
+
+	if (!start) {
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glColor3d(1.0, 1.0, 1.0);
+		setOrthographiProjection();
+		glPushMatrix();
+		glLoadIdentity();
+		sprintf(s, "SPEED");
+		renderBitmapString(350, 100, (void *)font, s);
+		sprintf(s, "Up arrow - accelerates");
+		renderBitmapString(260, 300, (void *)font, s);
+		sprintf(s, "Down arrow - break");
+		renderBitmapString(260, 350, (void *)font, s);
+		sprintf(s, "Left arrow - turn left");
+		renderBitmapString(260, 400, (void *)font, s);
+		sprintf(s, "Right arrow - turns right");
+		renderBitmapString(260, 450, (void *)font, s);
+		sprintf(s, "Click on the right button to start");
+		renderBitmapString(300, 700, GLUT_BITMAP_HELVETICA_12, s);
+		glPopMatrix();
+		resetPerspectiveProjection();
+		glutSwapBuffers();
+	}
+	else {
+		display();
 	}
 }
 
@@ -290,6 +290,14 @@ void processNormalKeys(unsigned char key, int xx, int yy) {
 		exit(0);
 }
 
+void mouseButton(int button, int state, int x, int y) {
+
+	// only start motion if the left button is pressed
+	if (button == GLUT_RIGHT_BUTTON) {
+		start = true;
+	}
+}
+
 void init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
@@ -306,25 +314,19 @@ void init() {
 	initModels();
 }
 
+
 void processMenuEvents(int option) {
 
-	if(option != 0){
+	if (option != 0) {
 		start = true;
 	}
-	else{
+	else {
 		glutDestroyWindow(mainWindow);
 		exit(0);
 	}
 	glFlush();
 }
 
-void mouseButton(int button, int state, int x, int y) {
-
-	// only start motion if the left button is pressed
-	if (button == GLUT_RIGHT_BUTTON) {
-		start = true;
-	}
-}
 
 void createGLUTMenus() {
 
@@ -334,8 +336,8 @@ void createGLUTMenus() {
 
 	mainMenu = glutCreateMenu(processMenuEvents);
 	//add entries to our menu
-	glutAddMenuEntry("Start",1);
-	glutAddMenuEntry("Exit",0);
+	glutAddMenuEntry("Start", 1);
+	glutAddMenuEntry("Exit", 0);
 	glutAddMenuEntry("Help", 2);
 
 	// attach the menu to the right button
@@ -343,7 +345,6 @@ void createGLUTMenus() {
 }
 
 int main(int argc, char **argv) {
-
 	// init GLUT and create window
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
@@ -351,7 +352,7 @@ int main(int argc, char **argv) {
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(800, 800);
 	mainWindow = glutCreateWindow("JANELINHA");
-	
+
 	// register callbacks
 	/*glutDisplayFunc(display);
 	glutReshapeFunc(changeSize);

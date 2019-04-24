@@ -11,7 +11,7 @@ public:
 	GLfloat color[4];
 	GLfloat position[4];
 
-	PointLight();
+	PointLight(float lpX, float lpY, float lpZ);
 	void addLight();
 	void draw();
 	void disable();
