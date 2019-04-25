@@ -47,20 +47,25 @@ void changeSize(int width, int heigth) {
 
 	float ratio = w * 1.0 / h;
 
+
+	// Set the viewport to be the entire window
+	glViewport(0, 0, w, h);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	// Use the Projection Matrix
 	glMatrixMode(GL_PROJECTION);
 
 	// Reset Matrix
 	glLoadIdentity();
 
-	// Set the viewport to be the entire window
-	glViewport(0, 0, w, h);
-
 	// Set the correct perspective.
 	gluPerspective(45.f, ratio, 1.f, 100.f);
 
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
+
+	glLoadIdentity();
 }
 
 void initModels() {
@@ -160,6 +165,37 @@ void renderBitmapString(float x, float y, void *font, const char *string) {
 	}
 }
 
+void drawScene() {
+	glPushMatrix();
+	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
+	pointlight.addLight();
+	glPopMatrix();
+
+	// Draw ground
+	GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
+	glBegin(GL_QUADS);
+	glVertex3f(-100.0f, 0.f, -100.0f);
+	glVertex3f(-100.0f, 0.f, 100.0f);
+	glVertex3f(100.0f, 0.f, 100.0f);
+	glVertex3f(100.0f, 0.f, -100.0f);
+	glEnd();
+
+	//Draw Car Model
+	glPushMatrix();
+	glMultMatrixf(models[0]->local);
+	models[0]->draw();
+	glPopMatrix();
+
+	// Draw 36 SnowMen
+	glPushMatrix();
+	glTranslatef(0, 0, 10.0);
+	drawSnowMan();
+	glPopMatrix();
+
+}
+
+
 void display(void) {
 
 	// Clear Color and Depth Buffers
@@ -176,6 +212,7 @@ void display(void) {
 	// Reset transformations
 	glLoadIdentity();
 
+	//Update car transformation matrix
 	if (models[0]->nextMove) {
 		models[0]->isMoving = true;
 		GLfloat viewModelMatrix[16];
@@ -214,28 +251,7 @@ void display(void) {
 	GLfloat globalAmbientVec[4] = {globalAmbient, globalAmbient, globalAmbient, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientVec);
 
-
-	glPushMatrix();
-	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
-	pointlight.addLight();
-	glPopMatrix();
-
-
-	// Draw ground
-	GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-	glBegin(GL_QUADS);
-		glVertex3f(-100.0f, 0.f, -100.0f);
-		glVertex3f(-100.0f, 0.f, 100.0f);
-		glVertex3f(100.0f, 0.f, 100.0f);
-		glVertex3f(100.0f, 0.f, -100.0f);
-	glEnd();
-
-	//Draw Models
-	glPushMatrix();
-	glMultMatrixf(models[0]->local);
-	models[0]->draw();
-	glPopMatrix();
+	drawScene();
 
 	glColorMask(1, 1, 1, 1); //Enable drawing colors to the screen
 	glEnable(GL_DEPTH_TEST); //Enable depth testing
@@ -243,29 +259,21 @@ void display(void) {
 	glStencilFunc(GL_EQUAL, 1, 1);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Make the stencil buffer not change
 
-
-	// Draw 36 SnowMen
-	glPushMatrix();
-	glTranslatef(0, 0, 10.0);
-	drawSnowMan();
-	glPopMatrix();
-
 	glFlush();
 	glutSwapBuffers();
 	glutPostRedisplay();
 }
 
-void pressKey(int key, int xx, int yy) {
-
-	
-	switch (key) {
-	case GLUT_KEY_LEFT:  models[0]->nextMove = []() { glRotatef(1, 0, 1, 0); };   break;
-	case GLUT_KEY_RIGHT: models[0]->nextMove = []() { glRotatef(-1, 0, 1, 0); };  break;
-	case GLUT_KEY_UP:	 models[0]->nextMove = []() { glTranslated(0, 0, 0.2); }; break;
-	case GLUT_KEY_DOWN:  models[0]->nextMove = []() { glTranslated(0, 0, -0.2); }; break;
+void normalKeyPress(unsigned char key, int xx, int yy) {
+	if (start) {
+		models[0]->keyPressed(key);
 	}
-	glutPostRedisplay();
-	
+}
+
+void normalKeyUp(unsigned char key, int x, int y) {
+	if (start) {
+		models[0]->keyUp(key);
+	}
 }
 
 void MenuText(void) {
@@ -292,19 +300,8 @@ void MenuText(void) {
 		resetPerspectiveProjection();
 		glutSwapBuffers();
 	}
-	else {
+	else
 		display();
-	}
-}
-
-void releaseKey(int key, int x, int y) {
-
-	switch (key) {
-		case GLUT_KEY_LEFT:
-		case GLUT_KEY_RIGHT: deltaAngle = 0.0f; break;
-		case GLUT_KEY_UP:
-		case GLUT_KEY_DOWN: deltaMove = 0; break;
-	}
 }
 
 void processNormalKeys(unsigned char key, int xx, int yy) {
@@ -329,8 +326,6 @@ void init() {
 	// register callbacks
 	glutIgnoreKeyRepeat(1);
 	glutKeyboardFunc(processNormalKeys);
-	glutSpecialFunc(pressKey);
-	glutSpecialUpFunc(releaseKey);
 	glutMouseFunc(mouseButton);
 
 	initModels();
@@ -374,24 +369,28 @@ int main(int argc, char **argv) {
 	mainWindow = glutCreateWindow("JANELINHA");
 
 	// register callbacks
-	/*glutDisplayFunc(display);
-	glutReshapeFunc(changeSize);
-	glutIdleFunc(display);*/
 	//Aparecer menu
-	glutDisplayFunc(MenuText);
+	if (start) {
+		glutDisplayFunc(display);
+		glutIdleFunc(display);	
+	}else {
+		glutDisplayFunc(MenuText);
+		glutIdleFunc(MenuText);
+	}
+
 	glutReshapeFunc(changeSize);
-	glutIdleFunc(MenuText);
+	
 	init();
 
 	// OpenGL init
-	glutSpecialFunc(pressKey);
+	glutKeyboardFunc(normalKeyPress);
+	glutKeyboardUpFunc(normalKeyUp);
 	glShadeModel(GL_SMOOTH);
 	glEnable(GL_LIGHTING);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 
 
 	pointlight.enable();
@@ -401,5 +400,5 @@ int main(int argc, char **argv) {
 	glutMainLoop();
 
 	deleteModels();
-	return 1;
+	return 0;
 }

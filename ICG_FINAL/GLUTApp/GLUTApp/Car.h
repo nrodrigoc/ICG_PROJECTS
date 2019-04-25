@@ -18,14 +18,17 @@ public:
 	std::function<void()> nextMove;
 	bool isMoving;
 
+
+	//Functions
+	void keyPressed(const unsigned char key);
+	void keyUp(const unsigned char key);
 	void init();
 	void draw();
 	~Car() = default;
 private:
 	//update constant animation for tail wiggle and legs movement
-	void updateConstantMovement();
-	GLfloat tailWiggleAngle;
-	bool tailWiggleDirectionLeft;
+	void updateCameraHoriMovement();
+	bool isWPressing, isSPressing, isAPressing, isDPressing;
 	GLfloat legsAngle;
 	bool legsMovementDirectionForward;
 };
