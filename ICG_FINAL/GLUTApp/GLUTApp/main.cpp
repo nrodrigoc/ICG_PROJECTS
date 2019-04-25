@@ -280,6 +280,34 @@ void normalKeyUp(unsigned char key, int x, int y) {
 	}
 }
 
+void processMenuEvents(int option) {
+
+	if (option != 0) {
+		start = true;
+	}
+	else {
+		glutDestroyWindow(mainWindow);
+		exit(0);
+	}
+	glFlush();
+}
+
+void createGLUTMenus() {
+
+	// create the menu and
+	// tell glut that "processMenuEvents" will
+	// handle the events
+
+	mainMenu = glutCreateMenu(processMenuEvents);
+	//add entries to our menu
+	glutAddMenuEntry("Start", 1);
+	glutAddMenuEntry("Exit", 0);
+	glutAddMenuEntry("Help", 2);
+
+	// attach the menu to the right button
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
 void MenuText(void) {
 
 	if (!start) {
@@ -318,7 +346,7 @@ void mouseButton(int button, int state, int x, int y) {
 
 	// only start motion if the left button is pressed
 	if (button == GLUT_RIGHT_BUTTON) {
-		start = true;
+		createGLUTMenus();
 	}
 }
 
@@ -333,34 +361,6 @@ void init() {
 	glutMouseFunc(mouseButton);
 
 	initModels();
-}
-
-void processMenuEvents(int option) {
-
-	if (option != 0) {
-		start = true;
-	}
-	else {
-		glutDestroyWindow(mainWindow);
-		exit(0);
-	}
-	glFlush();
-}
-
-void createGLUTMenus() {
-
-	// create the menu and
-	// tell glut that "processMenuEvents" will
-	// handle the events
-
-	mainMenu = glutCreateMenu(processMenuEvents);
-	//add entries to our menu
-	glutAddMenuEntry("Start", 1);
-	glutAddMenuEntry("Exit", 0);
-	glutAddMenuEntry("Help", 2);
-
-	// attach the menu to the right button
-	glutAttachMenu(GLUT_RIGHT_BUTTON);
 }
 
 int main(int argc, char **argv) {
