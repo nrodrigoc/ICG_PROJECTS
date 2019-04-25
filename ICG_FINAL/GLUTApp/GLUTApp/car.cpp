@@ -111,11 +111,24 @@ void Car::updateCameraHoriMovement() {
 	if (isDPressing)
 		dx -= 0.15;
 
-	if (dz != 0 || dx != 0) {
+	if (dz != 0 && dx == 0) {
+		//Move o carro
+		nextMove = [dz]() {
+			glTranslated(0, 0, dz); 
+			//glRotatef(dx, 0, 1, 0);
+		};
+	}else if (dz > 0 && dx != 0) {
 		//Move o carro
 		nextMove = [dz, dx]() {
-			glTranslated(0, 0, dz); 
+			glTranslated(0, 0, dz);
 			glRotatef(dx, 0, 1, 0);
+		};
+	}
+	else if (dz < 0 && dx != 0) {
+		//Move o carro
+		nextMove = [dz, dx]() {
+			glTranslated(0, 0, dz);
+			glRotatef(-dx, 0, 1, 0);
 		};
 	}
 
