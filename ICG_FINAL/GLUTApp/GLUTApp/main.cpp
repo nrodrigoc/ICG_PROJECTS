@@ -27,7 +27,7 @@ GLfloat globalAmbient = 0.3f;
 Camera camera;
 
 //Models
-std::vector<Model*> models;
+std::vector<Car*> models;
 
 //Menu veriables
 char s[300]; //Guardar o texto;
@@ -35,8 +35,6 @@ int mainMenu;
 bool start = false;
 const void* font = GLUT_BITMAP_TIMES_ROMAN_24;
 
-
-void mouseButton(int button, int state, int x, int y);
 
 void changeSize(int width, int heigth) {
 
@@ -66,11 +64,11 @@ void changeSize(int width, int heigth) {
 }
 
 void initModels() {
-	Model *myModel = new Model(RED_CAR);
-	if(!myModel->importModel())
+	Car *myCar = new Car(RED_CAR);
+	if(!myCar->carro->importModel())
 		std::cout << "Import model error!" << std::endl;
 
-	models.push_back(myModel);
+	models.push_back(myCar);
 }
 
 void drawModels()
@@ -85,7 +83,7 @@ void drawModels()
 		glTranslatef(0, 0.5, 0.0);
 		glRotatef(angleM, 0.f, 1.f, 0.f);
 		glScalef(5.f, 5.f, 5.f);
-		models[i]->renderTheModel();
+		models[i]->carro->renderTheModel();
 		glPopMatrix();
 	}
 }
@@ -106,21 +104,6 @@ void computeDir(float deltaAngle) {
 	angle += deltaAngle;
 	lx = sin(angle);
 	lz = -cos(angle);
-}
-
-void mouseMove(int x, int y) {
-	// this will only be true when the left button is down
-	if (xOrigin >= 0) {
-		// update deltaAngle
-		deltaAngle = (x - xOrigin) * 0.001f;
-		// update camera's direction
-		lx = sin(angle + deltaAngle);
-		lz = -cos(angle + deltaAngle);
-		// setting the main window as active
-		//and marking it for redraw
-		glutSetWindow(mainWindow);
-		glutPostRedisplay();
-	}
 }
 
 void drawSnowMan() {
@@ -193,15 +176,44 @@ void display(void) {
 	// Reset transformations
 	glLoadIdentity();
 
-	GLfloat globalAmbientVec[4] = { globalAmbient, globalAmbient, globalAmbient, 1.0 };
+	if (models[0]->nextMove) {
+		models[0]->isMoving = true;
+		GLfloat viewModelMatrix[16];
+		glGetFloatv(GL_MODELVIEW_MATRIX, viewModelMatrix);
+		glLoadMatrixf(models[0]->local);
+		models[0]->nextMove();
+		models[0]->nextMove = nullptr;
+		glGetFloatv(GL_MODELVIEW_MATRIX, models[0]->local);
+		glLoadMatrixf(viewModelMatrix);
+	}
+
+	/*Camera do carro*/
+	GLfloat viewModelMatrix[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, viewModelMatrix);
+	glLoadMatrixf(models[0]->local);
+
+	glRotatef(models[0]->camVerticalAngle, 1, 0, 0);
+	glRotatef(models[0]->camHorizontalAngle, 0, 1, 0);
+	glTranslated(0, 1.5, 0.9);
+
+	GLfloat cameraPoseInCarView[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX, cameraPoseInCarView);
+	glLoadMatrixf(viewModelMatrix);
+
+	//Hack...
+	GLfloat zAngle = atan2(-cameraPoseInCarView[2], cameraPoseInCarView[0]);
+	GLfloat yAngle = atan2(-cameraPoseInCarView[9], cameraPoseInCarView[5]);
+
+	gluLookAt(cameraPoseInCarView[12], cameraPoseInCarView[13], cameraPoseInCarView[14],
+		sin(zAngle) + cameraPoseInCarView[12],
+		-yAngle + cameraPoseInCarView[13],
+		cos(zAngle) + cameraPoseInCarView[14],
+		0, 1, 0);
+
+
+	GLfloat globalAmbientVec[4] = {globalAmbient, globalAmbient, globalAmbient, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientVec);
 
-	// Set the camera
-	gluLookAt(
-		x, 1.0f, z,
-		x + lx, 1.0f, z + lz,
-		0.0f, 1.0f, 0.0f
-	);
 
 	glPushMatrix();
 	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
@@ -220,29 +232,40 @@ void display(void) {
 	glEnd();
 
 	//Draw Models
-	drawModels();
-	angleM += 0.1f;
+	glPushMatrix();
+	glMultMatrixf(models[0]->local);
+	models[0]->draw();
+	glPopMatrix();
+
+	glColorMask(1, 1, 1, 1); //Enable drawing colors to the screen
+	glEnable(GL_DEPTH_TEST); //Enable depth testing
+
+	glStencilFunc(GL_EQUAL, 1, 1);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP); //Make the stencil buffer not change
+
 
 	// Draw 36 SnowMen
-	/*for (int i = -3; i < 3; i++)
-		for (int j = -3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*10.0, 0, j * 10.0);
-			drawSnowMan();
-			glPopMatrix();
-		}*/
+	glPushMatrix();
+	glTranslatef(0, 0, 10.0);
+	drawSnowMan();
+	glPopMatrix();
 
+	glFlush();
 	glutSwapBuffers();
+	glutPostRedisplay();
 }
 
 void pressKey(int key, int xx, int yy) {
 
+	
 	switch (key) {
-	case GLUT_KEY_LEFT: deltaAngle = -0.005f; break;
-	case GLUT_KEY_RIGHT: deltaAngle = 0.005f; break;
-	case GLUT_KEY_UP: deltaMove = 0.5f; break;
-	case GLUT_KEY_DOWN: deltaMove = -0.5f; break;
+	case GLUT_KEY_LEFT:  models[0]->nextMove = []() { glRotatef(1, 0, 1, 0); };   break;
+	case GLUT_KEY_RIGHT: models[0]->nextMove = []() { glRotatef(-1, 0, 1, 0); };  break;
+	case GLUT_KEY_UP:	 models[0]->nextMove = []() { glTranslated(0, 0, 0.2); }; break;
+	case GLUT_KEY_DOWN:  models[0]->nextMove = []() { glTranslated(0, 0, -0.2); }; break;
 	}
+	glutPostRedisplay();
+	
 }
 
 void MenuText(void) {
@@ -309,11 +332,9 @@ void init() {
 	glutSpecialFunc(pressKey);
 	glutSpecialUpFunc(releaseKey);
 	glutMouseFunc(mouseButton);
-	glutMotionFunc(mouseMove);
 
 	initModels();
 }
-
 
 void processMenuEvents(int option) {
 
@@ -326,7 +347,6 @@ void processMenuEvents(int option) {
 	}
 	glFlush();
 }
-
 
 void createGLUTMenus() {
 
@@ -349,8 +369,8 @@ int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH | GLUT_MULTISAMPLE | GLUT_STENCIL);
-	glutInitWindowPosition(100, 100);
-	glutInitWindowSize(800, 800);
+	glutInitWindowPosition(150, 0);
+	glutInitWindowSize(800, 600);
 	mainWindow = glutCreateWindow("JANELINHA");
 
 	// register callbacks
@@ -364,13 +384,18 @@ int main(int argc, char **argv) {
 	init();
 
 	// OpenGL init
-	glEnable(GL_DEPTH_TEST);
+	glutSpecialFunc(pressKey);
+	glShadeModel(GL_SMOOTH);
 	glEnable(GL_LIGHTING);
 	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_NORMALIZE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
+
 	pointlight.enable();
+	models[0]->init();
 
 	// enter GLUT event processing cycle
 	glutMainLoop();

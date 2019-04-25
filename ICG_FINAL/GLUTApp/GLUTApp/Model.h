@@ -1,10 +1,8 @@
 ﻿#pragma once
 
 #include <stdio.h>
-#include <glew.h>  
+//#include <glew.h>  
 #include <freeglut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 
 #include <fstream>
 #include <stdlib.h>
@@ -27,7 +25,7 @@ class Model
 {
 public:
 
-	Model(std::string fileName);
+	Model(const std::string fileName);
 	~Model();
 	void renderTheModel();
 	bool importModel();

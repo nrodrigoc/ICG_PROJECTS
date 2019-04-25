@@ -1,6 +1,6 @@
 ﻿#include "Model.h"
 
-Model::Model(std::string fileName)
+Model::Model(const std::string fileName)
 {
 	modelpath = fileName;
 }

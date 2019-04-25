@@ -19,9 +19,10 @@
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 
+#include "Model.h"
 #include "PointLight.h"
 #include "Camera.h"
-#include "Model.h"
+#include "Car.h"
 
 
 #endif // ! _LIBS_H_
