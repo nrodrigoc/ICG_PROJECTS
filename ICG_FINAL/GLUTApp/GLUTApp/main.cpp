@@ -27,7 +27,7 @@ GLfloat globalAmbient = 0.3f;
 Camera camera;
 
 //Models
-std::vector<Car*> models;
+std::vector<Car*> carros;
 
 //Menu veriables
 char s[300]; //Guardar o texto;
@@ -73,12 +73,12 @@ void initModels() {
 	if(!myCar->carro->importModel())
 		std::cout << "Import model error!" << std::endl;
 
-	models.push_back(myCar);
+	carros.push_back(myCar);
 }
 
 void drawModels()
 {
-	for (int i = 0; i < models.size(); i++) {
+	for (int i = 0; i < carros.size(); i++) {
 		glPushMatrix();
 
 		// 设置模板缓冲为可写状态，把较小的面包放入模板缓冲（设为1）
@@ -88,14 +88,14 @@ void drawModels()
 		glTranslatef(0, 0.5, 0.0);
 		glRotatef(angleM, 0.f, 1.f, 0.f);
 		glScalef(5.f, 5.f, 5.f);
-		models[i]->carro->renderTheModel();
+		carros[i]->carro->renderTheModel();
 		glPopMatrix();
 	}
 }
 
 void deleteModels() {
-	for (int i = 0; i < models.size(); i++)
-		delete models[i];
+	for (int i = 0; i < carros.size(); i++)
+		delete carros[i];
 }
 		
 void computePos(float deltaMove) 
@@ -183,15 +183,19 @@ void drawScene() {
 
 	//Draw Car Model
 	glPushMatrix();
-	glMultMatrixf(models[0]->local);
-	models[0]->draw();
+	glMultMatrixf(carros[0]->local);
+	carros[0]->draw();
 	glPopMatrix();
 
 	// Draw 36 SnowMen
-	glPushMatrix();
-	glTranslatef(0, 0, 10.0);
-	drawSnowMan();
-	glPopMatrix();
+	for (int i = -3; i < 3; i++) {
+		for (int j = -3; j < 3; j++) {
+			glPushMatrix();
+			glTranslatef(i * 10, 0, j*10.0);
+			drawSnowMan();
+			glPopMatrix();
+		}
+	}
 
 }
 
@@ -213,24 +217,24 @@ void display(void) {
 	glLoadIdentity();
 
 	//Update car transformation matrix
-	if (models[0]->nextMove) {
-		models[0]->isMoving = true;
+	if (carros[0]->nextMove) {
+		carros[0]->isMoving = true;
 		GLfloat viewModelMatrix[16];
 		glGetFloatv(GL_MODELVIEW_MATRIX, viewModelMatrix);
-		glLoadMatrixf(models[0]->local);
-		models[0]->nextMove();
-		models[0]->nextMove = nullptr;
-		glGetFloatv(GL_MODELVIEW_MATRIX, models[0]->local);
+		glLoadMatrixf(carros[0]->local);
+		carros[0]->nextMove();
+		carros[0]->nextMove = nullptr;
+		glGetFloatv(GL_MODELVIEW_MATRIX, carros[0]->local);
 		glLoadMatrixf(viewModelMatrix);
 	}
 
 	/*Camera do carro*/
 	GLfloat viewModelMatrix[16];
 	glGetFloatv(GL_MODELVIEW_MATRIX, viewModelMatrix);
-	glLoadMatrixf(models[0]->local);
+	glLoadMatrixf(carros[0]->local);
 
-	glRotatef(models[0]->camVerticalAngle, 1, 0, 0);
-	glRotatef(models[0]->camHorizontalAngle, 0, 1, 0);
+	glRotatef(carros[0]->camVerticalAngle, 1, 0, 0);
+	glRotatef(carros[0]->camHorizontalAngle, 0, 1, 0);
 	glTranslated(0, 1.5, 0.9);
 
 	GLfloat cameraPoseInCarView[16];
@@ -266,13 +270,13 @@ void display(void) {
 
 void normalKeyPress(unsigned char key, int xx, int yy) {
 	if (start) {
-		models[0]->keyPressed(key);
+		carros[0]->keyPressed(key);
 	}
 }
 
 void normalKeyUp(unsigned char key, int x, int y) {
 	if (start) {
-		models[0]->keyUp(key);
+		carros[0]->keyUp(key);
 	}
 }
 
@@ -394,7 +398,7 @@ int main(int argc, char **argv) {
 
 
 	pointlight.enable();
-	models[0]->init();
+	carros[0]->init();
 
 	// enter GLUT event processing cycle
 	glutMainLoop();
