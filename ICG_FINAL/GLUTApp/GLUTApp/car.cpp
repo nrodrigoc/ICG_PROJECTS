@@ -103,17 +103,21 @@ void Car::updateCameraHoriMovement() {
 	double dz = 0;
 
 	if (isWPressing)
-		dz += 0.2;
+		dz += 0.15;
 	if (isSPressing)
-		dz -= 0.2;
+		dz -= 0.15;
 	if (isAPressing)
-		dx -= 2;
+		dx += 0.15;
 	if (isDPressing)
-		dx += 2;
+		dx -= 0.15;
 
 	if (dz != 0 || dx != 0) {
 		//Move o carro
-		nextMove = [dz]() {glTranslated(0, 0, dz); };
-
+		nextMove = [dz, dx]() {
+			glTranslated(0, 0, dz); 
+			glRotatef(dx, 0, 1, 0);
+		};
 	}
+
+
 }
