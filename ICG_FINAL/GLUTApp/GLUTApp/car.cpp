@@ -1,9 +1,9 @@
-﻿#include "Car.h"
-#include <freeglut.h>
+#include "Car.h"
+#include <GL/freeglut.h>
 #include "Model.h"
 #include <glm.hpp>
 
-Car::Car(const std::string fileName){
+Car::Car(const std::string fileName) {
 	carro = new Model(fileName);
 	camHorizontalAngle = 0.f;
 	camVerticalAngle = 15.f;
@@ -86,7 +86,17 @@ void Car::draw() {
 
 	glPushMatrix();
 
-	// 设置模板缓冲为可写状态，把较小的面包放入模板缓冲（设为1）
+	GLfloat carSpecular[] = { 1.f, 1.f, 1.f };
+	GLfloat carShininess = 1.f;
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, carSpecular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, carShininess);
+	glMaterialf(GL_FRONT_AND_BACK, GL_EMISSION, 1);
+
+	glColorMaterial(GL_FRONT, GL_SHININESS);
+	glEnable(GL_COLOR_MATERIAL);
+
+	
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glStencilMask(0xFF);
 
@@ -114,10 +124,11 @@ void Car::updateCameraHoriMovement() {
 	if (dz != 0 && dx == 0) {
 		//Move o carro
 		nextMove = [dz]() {
-			glTranslated(0, 0, dz); 
+			glTranslated(0, 0, dz);
 			//glRotatef(dx, 0, 1, 0);
 		};
-	}else if (dz > 0 && dx != 0) {
+	}
+	else if (dz > 0 && dx != 0) {
 		//Move o carro
 		nextMove = [dz, dx]() {
 			glTranslated(0, 0, dz);
