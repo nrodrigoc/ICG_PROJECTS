@@ -1,4 +1,4 @@
-﻿#include "libs.h"
+#include "libs.h"
 
 using namespace std;
 
@@ -21,6 +21,7 @@ int w, h;
 
 //Lights
 PointLight pointlight(0, 5, 0);
+SpotLight spotlight;
 GLfloat globalAmbient = 0.3f;
 
 //Camera
@@ -45,7 +46,7 @@ void changeSize(int width, int heigth) {
 	if (h == 0)
 		h = 1;
 
-	float ratio = w * 1.0 / h;
+	float ratio = (float) w * 1.0 / h;
 
 
 	// Set the viewport to be the entire window
@@ -70,7 +71,7 @@ void changeSize(int width, int heigth) {
 
 void initModels() {
 	Car *myCar = new Car(RED_CAR);
-	if(!myCar->carro->importModel())
+	if (!myCar->carro->importModel())
 		std::cout << "Import model error!" << std::endl;
 
 	carros.push_back(myCar);
@@ -81,7 +82,6 @@ void drawModels()
 	for (int i = 0; i < carros.size(); i++) {
 		glPushMatrix();
 
-		// 设置模板缓冲为可写状态，把较小的面包放入模板缓冲（设为1）
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
@@ -97,8 +97,8 @@ void deleteModels() {
 	for (int i = 0; i < carros.size(); i++)
 		delete carros[i];
 }
-		
-void computePos(float deltaMove) 
+
+void computePos(float deltaMove)
 {
 	x += deltaMove * lx * 0.1f;
 	z += deltaMove * lz * 0.1f;
@@ -117,6 +117,12 @@ void drawSnowMan() {
 	glEnable(GL_COLOR_MATERIAL);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	GLfloat snowmanSpecular[] = {1.f, 1.f, 1.f };
+	GLfloat snowmanShininess = 1.f;
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, snowmanSpecular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, snowmanShininess);
+	glMaterialf(GL_FRONT_AND_BACK, GL_EMISSION, 1);
 	// Draw Body	
 	glTranslatef(0.0f, 0.75f, 0.0f);
 	glutSolidSphere(0.75f, 20, 20);
@@ -124,7 +130,7 @@ void drawSnowMan() {
 	// Draw Head
 	glTranslatef(0.0f, 1.0f, 0.0f);
 	glutSolidSphere(0.25f, 20, 20);
-	
+
 	// Draw Eyes
 	glPushMatrix();
 	glColor4f(0.0f, 0.0f, 0.0f, 1.0f);
@@ -169,6 +175,16 @@ void drawScene() {
 	glPushMatrix();
 	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
 	pointlight.addLight();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
+	spotlight.addlight();
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
+	spotlight.draw();
 	glPopMatrix();
 
 	// Draw ground
@@ -252,7 +268,7 @@ void display(void) {
 		0, 1, 0);
 
 
-	GLfloat globalAmbientVec[4] = {globalAmbient, globalAmbient, globalAmbient, 1.0 };
+	GLfloat globalAmbientVec[4] = { globalAmbient, globalAmbient, globalAmbient, 1.0 };
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, globalAmbientVec);
 
 	drawScene();
@@ -302,7 +318,6 @@ void createGLUTMenus() {
 	//add entries to our menu
 	glutAddMenuEntry("Start", 1);
 	glutAddMenuEntry("Exit", 0);
-	glutAddMenuEntry("Help", 2);
 
 	// attach the menu to the right button
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
@@ -376,14 +391,15 @@ int main(int argc, char **argv) {
 	//Aparecer menu
 	if (start) {
 		glutDisplayFunc(display);
-		glutIdleFunc(display);	
-	}else {
+		glutIdleFunc(display);
+	}
+	else {
 		glutDisplayFunc(MenuText);
 		glutIdleFunc(MenuText);
 	}
 
 	glutReshapeFunc(changeSize);
-	
+
 	init();
 
 	// OpenGL init
