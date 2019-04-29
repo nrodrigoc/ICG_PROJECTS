@@ -1,11 +1,11 @@
 #pragma once
 
-#include <freeglut.h>
+#include  <GL\freeglut.h>
 #include <functional>
 #include "Model.h"
 
 /*
-The Dog object, renders the dog and exposes the dog controls to the ui.
+The Car object, renders the car
 */
 class Car
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <freeglut.h>
+#include <GL\freeglut.h>
 
 /*
 PointLight is light source with uniform light distribution.

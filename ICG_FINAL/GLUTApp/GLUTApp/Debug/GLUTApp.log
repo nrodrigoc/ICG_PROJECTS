@@ -1,12 +1,8 @@
-﻿  Camera.cpp
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\camera.cpp(15): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  Model.cpp
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\model.cpp(218): warning C4305: 'argument': truncation from 'double' to 'float'
-  PointLight.cpp
-  Generating Code...
-  main.cpp
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(50): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(78): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(94): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(162): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+﻿  main.cpp
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(49): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(82): warning C4018: '<': signed/unsigned mismatch
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(97): warning C4018: '<': signed/unsigned mismatch
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(252): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(308): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(308): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
   GLUTApp.vcxproj -> C:\Users\nrodrigo\Documents\GitHub\ICG_PROJECTS\ICG_FINAL\GLUTApp\Debug\GLUTApp.exe

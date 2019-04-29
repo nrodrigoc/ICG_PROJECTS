@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)/../External Libraries/GLM/include;$(SolutionDir)/../External Libraries/assimp/include;$(SolutionDir)/../External Libraries/GLUT/include/GL;$(SolutionDir)/../External Libraries/GLEW/include/GL;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/../External Libraries/GLM/include;$(SolutionDir)/../External Libraries/assimp/include;$(SolutionDir)/../External Libraries/GLUT/include;$(SolutionDir)/../External Libraries/GLEW/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -128,6 +128,7 @@
     </ClCompile>
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="PointLight.cpp" />
+    <ClCompile Include="Spotlight.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
@@ -135,6 +136,7 @@
     <ClInclude Include="libs.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="PointLight.h" />
+    <ClInclude Include="Spotlight.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

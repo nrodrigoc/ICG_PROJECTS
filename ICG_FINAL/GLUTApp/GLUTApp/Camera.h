@@ -1,5 +1,5 @@
 ﻿#pragma once
-#include <freeglut.h>
+#include  <GL\freeglut.h>
 
 /*
 the Camera controling the external view point.

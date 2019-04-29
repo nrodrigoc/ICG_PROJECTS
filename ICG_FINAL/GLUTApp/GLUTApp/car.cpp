@@ -1,5 +1,5 @@
 #include "Car.h"
-#include <GL/freeglut.h>
+#include <GL\freeglut.h>
 #include "Model.h"
 #include <glm.hpp>
 
@@ -96,7 +96,7 @@ void Car::draw() {
 	glColorMaterial(GL_FRONT, GL_SHININESS);
 	glEnable(GL_COLOR_MATERIAL);
 
-	
+
 	glStencilFunc(GL_ALWAYS, 1, 0xFF);
 	glStencilMask(0xFF);
 

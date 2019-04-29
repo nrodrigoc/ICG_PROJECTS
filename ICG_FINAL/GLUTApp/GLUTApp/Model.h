@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 //#include <glew.h>  
-#include <freeglut.h>
+#include <GL/freeglut.h>
 
 #include <fstream>
 #include <stdlib.h>

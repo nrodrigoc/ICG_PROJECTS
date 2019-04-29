@@ -1,0 +1,4 @@
+﻿  main.cpp
+c:\users\nrodrigo\documents\github\icg_projects\icg_t2\icg_t2\icg_t2\pipeline.h(91): warning C4018: '<': signed/unsigned mismatch
+c:\users\nrodrigo\documents\github\icg_projects\icg_t2\icg_t2\icg_t2\pipeline.h(97): warning C4018: '<': signed/unsigned mismatch
+  ICG_T2.vcxproj -> C:\Users\nrodrigo\Documents\GitHub\ICG_PROJECTS\ICG_T2\ICG_T2\Debug\ICG_T2.exe

@@ -30,6 +30,9 @@
     <ClCompile Include="car.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Spotlight.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libs.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spotlight.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

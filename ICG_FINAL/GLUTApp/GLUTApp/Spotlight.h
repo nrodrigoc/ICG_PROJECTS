@@ -1,6 +1,6 @@
 #pragma once
 #include <math.h>
-#include <GL/freeglut.h>
+#include <GL\freeglut.h>
 
 /*
 Spotlight object handling position, target and other lighting properties.

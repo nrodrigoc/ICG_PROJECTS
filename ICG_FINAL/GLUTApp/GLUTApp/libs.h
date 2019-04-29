@@ -8,7 +8,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include <glew.h>
-#include <freeglut.h>
+#include <GL\freeglut.h>
 
 #include <glm.hpp>
 #include <vec2.hpp>
@@ -21,6 +21,7 @@
 
 #include "Model.h"
 #include "PointLight.h"
+#include "Spotlight.h"
 #include "Camera.h"
 #include "Car.h"
 

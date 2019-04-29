@@ -22,7 +22,7 @@ int w, h;
 //Lights
 PointLight pointlight(0, 5, 0);
 SpotLight spotlight;
-GLfloat globalAmbient = 0.3f;
+GLfloat globalAmbient = 0.4f;
 
 //Camera
 Camera camera;
@@ -111,6 +111,102 @@ void computeDir(float deltaAngle) {
 	lz = -cos(angle);
 }
 
+void DrawSkyBox(void)
+{
+	GLfloat fExtent = 15.0f;
+
+	glBegin(GL_QUADS);
+	//////////////////////////////////////////////
+	// Negative X
+	glTexCoord3f(-1.0f, -1.0f, 1.0f);
+	glVertex3f(-fExtent, -fExtent, fExtent);
+
+	glTexCoord3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-fExtent, -fExtent, -fExtent);
+
+	glTexCoord3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(-fExtent, fExtent, -fExtent);
+
+	glTexCoord3f(-1.0f, 1.0f, 1.0f);
+	glVertex3f(-fExtent, fExtent, fExtent);
+
+
+	///////////////////////////////////////////////
+	//  Postive X
+	glTexCoord3f(1.0f, -1.0f, -1.0f);
+	glVertex3f(fExtent, -fExtent, -fExtent);
+
+	glTexCoord3f(1.0f, -1.0f, 1.0f);
+	glVertex3f(fExtent, -fExtent, fExtent);
+
+	glTexCoord3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(fExtent, fExtent, fExtent);
+
+	glTexCoord3f(1.0f, 1.0f, -1.0f);
+	glVertex3f(fExtent, fExtent, -fExtent);
+
+
+	////////////////////////////////////////////////
+	// Negative Z 
+	glTexCoord3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-fExtent, -fExtent, -fExtent);
+
+	glTexCoord3f(1.0f, -1.0f, -1.0f);
+	glVertex3f(fExtent, -fExtent, -fExtent);
+
+	glTexCoord3f(1.0f, 1.0f, -1.0f);
+	glVertex3f(fExtent, fExtent, -fExtent);
+
+	glTexCoord3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(-fExtent, fExtent, -fExtent);
+
+
+	////////////////////////////////////////////////
+	// Positive Z 
+	glTexCoord3f(1.0f, -1.0f, 1.0f);
+	glVertex3f(fExtent, -fExtent, fExtent);
+
+	glTexCoord3f(-1.0f, -1.0f, 1.0f);
+	glVertex3f(-fExtent, -fExtent, fExtent);
+
+	glTexCoord3f(-1.0f, 1.0f, 1.0f);
+	glVertex3f(-fExtent, fExtent, fExtent);
+
+	glTexCoord3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(fExtent, fExtent, fExtent);
+
+
+	//////////////////////////////////////////////////
+	// Positive Y
+	glTexCoord3f(-1.0f, 1.0f, 1.0f);
+	glVertex3f(-fExtent, fExtent, fExtent);
+
+	glTexCoord3f(-1.0f, 1.0f, -1.0f);
+	glVertex3f(-fExtent, fExtent, -fExtent);
+
+	glTexCoord3f(1.0f, 1.0f, -1.0f);
+	glVertex3f(fExtent, fExtent, -fExtent);
+
+	glTexCoord3f(1.0f, 1.0f, 1.0f);
+	glVertex3f(fExtent, fExtent, fExtent);
+
+
+	///////////////////////////////////////////////////
+	// Negative Y
+	glTexCoord3f(-1.0f, -1.0f, -1.0f);
+	glVertex3f(-fExtent, -fExtent, -fExtent);
+
+	glTexCoord3f(-1.0f, -1.0f, 1.0f);
+	glVertex3f(-fExtent, -fExtent, fExtent);
+
+	glTexCoord3f(1.0f, -1.0f, 1.0f);
+	glVertex3f(fExtent, -fExtent, fExtent);
+
+	glTexCoord3f(1.0f, -1.0f, -1.0f);
+	glVertex3f(fExtent, -fExtent, -fExtent);
+	glEnd();
+}
+
 void drawSnowMan() {
 
 	glPushMatrix();
@@ -172,6 +268,8 @@ void renderBitmapString(float x, float y, void *font, const char *string) {
 }
 
 void drawScene() {
+
+
 	glPushMatrix();
 	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
 	pointlight.addLight();
