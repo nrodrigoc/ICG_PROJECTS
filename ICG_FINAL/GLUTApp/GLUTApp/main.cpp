@@ -46,7 +46,7 @@ void changeSize(int width, int heigth) {
 	if (h == 0)
 		h = 1;
 
-	float ratio = (float) w * 1.0 / h;
+	float ratio = (float)w * 1.0 / h;
 
 
 	// Set the viewport to be the entire window
@@ -213,12 +213,12 @@ void drawSnowMan() {
 	glEnable(GL_COLOR_MATERIAL);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	GLfloat snowmanSpecular[] = {1.f, 1.f, 1.f };
+	GLfloat snowmanSpecular[] = { 1.f, 1.f, 1.f };
 	GLfloat snowmanShininess = 1.f;
 
-	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, snowmanSpecular);
-	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, snowmanShininess);
-	glMaterialf(GL_FRONT_AND_BACK, GL_EMISSION, 1);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, snowmanSpecular);
+	glMaterialf(GL_FRONT, GL_SHININESS, snowmanShininess);
+	glMaterialf(GL_FRONT, GL_EMISSION, 1);
 	// Draw Body	
 	glTranslatef(0.0f, 0.75f, 0.0f);
 	glutSolidSphere(0.75f, 20, 20);
@@ -280,10 +280,10 @@ void drawScene() {
 	spotlight.addlight();
 	glPopMatrix();
 
-	glPushMatrix();
+	/*glPushMatrix();
 	glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
 	spotlight.draw();
-	glPopMatrix();
+	glPopMatrix();*/
 
 	// Draw ground
 	GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
@@ -301,16 +301,31 @@ void drawScene() {
 	carros[0]->draw();
 	glPopMatrix();
 
-	// Draw 36 SnowMen
-	for (int i = -3; i < 3; i++) {
+	// Desenha os "postes" do lado direito
+	for (int i = 0; i < 1; i++) {
 		for (int j = -3; j < 3; j++) {
 			glPushMatrix();
-			glTranslatef(i * 10, 0, j*10.0);
-			drawSnowMan();
+			glTranslatef(i*10, 0, j*10.0);
+			glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
+			glRotatef(100.f, -5.0, -10, 0);
+			spotlight.draw();
+			//drawSnowMan();
 			glPopMatrix();
 		}
 	}
 
+	// Desenha os "postes" do lado esquerdo
+	for (int i = 0; i < 1; i++) {
+		for (int j = -3; j < 3; j++) {
+			glPushMatrix();
+			glTranslatef(i * 10, 0, j*10.0);
+			glTranslatef(spotlight.position[0]*(-1), spotlight.position[1], spotlight.position[2]);
+			glRotatef(100.f, -5.0, 10, 0);
+			spotlight.draw();
+			//drawSnowMan();
+			glPopMatrix();
+		}
+	}
 }
 
 
@@ -512,6 +527,7 @@ int main(int argc, char **argv) {
 
 
 	pointlight.enable();
+	spotlight.enable();
 	carros[0]->init();
 
 	// enter GLUT event processing cycle
