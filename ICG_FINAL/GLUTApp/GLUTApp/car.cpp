@@ -7,6 +7,7 @@ Car::Car(const std::string fileName) {
 	carro = new Model(fileName);
 	camHorizontalAngle = 0.f;
 	camVerticalAngle = 15.f;
+	carRotate = 90.f;
 	isWPressing = isSPressing = isAPressing = isDPressing = false;
 	legsAngle = 0.0f;
 	legsMovementDirectionForward = true;
@@ -58,11 +59,13 @@ void Car::keyUp(const unsigned char key) {
 	case 'A':
 	case 'a':
 		isAPressing = false;
+		this->carRotate = 90;
 		break;
 
 	case 'D':
 	case 'd':
 		isDPressing = false;
+		this->carRotate = 90;
 		break;
 	default:
 		break;
@@ -103,7 +106,7 @@ void Car::draw() {
 
 	glTranslatef(0, 0, 6.0);
 	glScalef(5.f, 5.f, 5.f);
-	glRotatef(90.f, 0.f, 1.f, 0.f);
+	glRotatef(this->carRotate, 0.f, 1.f, 0.f);
 	carro->renderTheModel();
 	glPopMatrix();
 
@@ -117,10 +120,14 @@ void Car::updateCameraHoriMovement() {
 		dz += 0.50;
 	if (isSPressing)
 		dz -= 0.15;
-	if (isAPressing)
-		dx += 0.25;
-	if (isDPressing)
-		dx -= 0.25;
+	if (isAPressing) {
+		dx += 1;
+		this->carRotate = 100.f;
+	}
+	if (isDPressing) {
+		dx -= 1;
+		this->carRotate = 80.f;
+	}
 
 	if (dz != 0 && dx == 0) {
 		//Move o carro

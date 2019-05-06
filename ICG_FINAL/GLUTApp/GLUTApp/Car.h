@@ -15,6 +15,7 @@ public:
 	Model *carro;
 	GLfloat camHorizontalAngle;
 	GLfloat camVerticalAngle;
+	GLfloat carRotate;
 	std::function<void()> nextMove;
 	bool isMoving;
 
