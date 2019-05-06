@@ -7,6 +7,7 @@ Car::Car(const std::string fileName) {
 	carro = new Model(fileName);
 	camHorizontalAngle = 0.f;
 	camVerticalAngle = 15.f;
+	moveSpeed = 1;
 	carRotate = 90.f;
 	isWPressing = isSPressing = isAPressing = isDPressing = false;
 	legsAngle = 0.0f;
@@ -49,6 +50,7 @@ void Car::keyUp(const unsigned char key) {
 	case 'W':
 	case 'w':
 		isWPressing = false;
+		this->moveSpeed = 2;
 		break;
 
 	case 'S':
@@ -116,16 +118,18 @@ void Car::updateCameraHoriMovement() {
 	double dx = 0;
 	double dz = 0;
 
-	if (isWPressing)
-		dz += 0.50;
+	if (isWPressing) {
+		dz += 0.5 * moveSpeed;
+		(moveSpeed < 2.5) ? moveSpeed += 0.01f : moveSpeed = 2.5f;
+	}
 	if (isSPressing)
 		dz -= 0.15;
 	if (isAPressing) {
-		dx += 1;
+		dx += 1.5;
 		this->carRotate = 100.f;
 	}
 	if (isDPressing) {
-		dx -= 1;
+		dx -= 1.5;
 		this->carRotate = 80.f;
 	}
 

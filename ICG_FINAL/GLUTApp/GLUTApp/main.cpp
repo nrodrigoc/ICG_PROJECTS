@@ -63,11 +63,11 @@ void changeSize(int width, int heigth) {
 	glLoadIdentity();
 
 	// Set the correct perspective.
-	gluPerspective(45.f, ratio, 1.f, 100.f);
+	gluPerspective(45.f, ratio, 1.f, 1000.f);
 
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
-
+		
 	glLoadIdentity();
 }
 
@@ -310,7 +310,7 @@ void drawScene() {
 
 	// Draw ground
 	glPushMatrix();
-	glScalef(8.5, 8.5, 8.5);
+	glScalef(10, 10, 8.5);
 	glTranslatef(-0.018f, 0, 0.75);
 	glRotatef(180.f, 0, 1, 0);
 	models[0]->renderTheModel();
