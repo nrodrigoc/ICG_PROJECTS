@@ -41,6 +41,7 @@ void Car::keyPressed(const unsigned char key)
 	}
 }
 
+//Funcao que reconhece quando a tecla parou de ser pressionada
 void Car::keyUp(const unsigned char key) {
 	switch (key) {
 
@@ -75,7 +76,7 @@ void Car::init() {
 	glLoadIdentity();
 
 	glRotatef(0.0f, 0.0f, 1.0f, 0.0f);
-	glTranslatef(0.0, 1, -5.f);
+	glTranslatef(0.0, 1.2, -5.f);
 
 	glGetFloatv(GL_MODELVIEW_MATRIX, local);
 	glLoadMatrixf(viewModelMatrix);
@@ -113,13 +114,13 @@ void Car::updateCameraHoriMovement() {
 	double dz = 0;
 
 	if (isWPressing)
-		dz += 0.15;
+		dz += 0.50;
 	if (isSPressing)
 		dz -= 0.15;
 	if (isAPressing)
-		dx += 0.15;
+		dx += 0.25;
 	if (isDPressing)
-		dx -= 0.15;
+		dx -= 0.25;
 
 	if (dz != 0 && dx == 0) {
 		//Move o carro

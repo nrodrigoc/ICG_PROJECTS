@@ -3,6 +3,7 @@
 using namespace std;
 
 #define RED_CAR "Objects/carrinho2.obj"
+#define PISTA "Objects/pista.obj"
 
 // angle of rotation for the camera direction
 float angle = 0.0f, angleM = 0.f;
@@ -29,11 +30,12 @@ Camera camera;
 
 //Models
 std::vector<Car*> carros;
+std::vector<Model*> models;
 
 //Menu veriables
 char s[300]; //Guardar o texto;
 int mainMenu;
-bool start = false;
+bool start = true;
 const void* font = GLUT_BITMAP_TIMES_ROMAN_24;
 
 
@@ -70,10 +72,15 @@ void changeSize(int width, int heigth) {
 }
 
 void initModels() {
+	Model *pista = new Model(PISTA);
 	Car *myCar = new Car(RED_CAR);
 	if (!myCar->carro->importModel())
 		std::cout << "Import model error!" << std::endl;
 
+	if (!pista->importModel())
+		std::cout << "Import model error!" << std::endl;
+
+	models.push_back(pista);
 	carros.push_back(myCar);
 }
 
@@ -85,17 +92,34 @@ void drawModels()
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilMask(0xFF);
 
-		glTranslatef(0, 0.5, 0.0);
+		glTranslatef(0.f, 0.f, 0.f);
 		glRotatef(angleM, 0.f, 1.f, 0.f);
 		glScalef(5.f, 5.f, 5.f);
 		carros[i]->carro->renderTheModel();
 		glPopMatrix();
 	}
+
+	for (int i = 0; i < models.size(); i++) {
+		glPushMatrix();
+
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+
+		glTranslatef(0.f, 0.f, 0.f);
+		glRotatef(0.f, 0.f, 1.f, 0.f);
+		glScalef(5.f, 5.f, 5.f);
+		models[i]->renderTheModel();
+		glPopMatrix();
+	}
+
+
 }
 
 void deleteModels() {
 	for (int i = 0; i < carros.size(); i++)
 		delete carros[i];
+
+	delete models[0];
 }
 
 void computePos(float deltaMove)
@@ -269,7 +293,6 @@ void renderBitmapString(float x, float y, void *font, const char *string) {
 
 void drawScene() {
 
-
 	glPushMatrix();
 	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
 	pointlight.addLight();
@@ -286,20 +309,28 @@ void drawScene() {
 	glPopMatrix();*/
 
 	// Draw ground
-	GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	glPushMatrix();
+	glScalef(8.5, 8.5, 8.5);
+	glTranslatef(-0.018f, 0, 0.75);
+	glRotatef(180.f, 0, 1, 0);
+	models[0]->renderTheModel();
+	glPopMatrix();
+	
+	/*GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
 	glBegin(GL_QUADS);
 	glVertex3f(-100.0f, 0.f, -100.0f);
 	glVertex3f(-100.0f, 0.f, 100.0f);
 	glVertex3f(100.0f, 0.f, 100.0f);
 	glVertex3f(100.0f, 0.f, -100.0f);
-	glEnd();
+	glEnd();*/
 
 	//Draw Car Model
 	glPushMatrix();
 	glMultMatrixf(carros[0]->local);
 	carros[0]->draw();
 	glPopMatrix();
+
 
 	// Desenha os "postes" do lado direito
 	for (int i = 0; i < 1; i++) {
@@ -528,6 +559,7 @@ int main(int argc, char **argv) {
 
 	pointlight.enable();
 	spotlight.enable();
+
 	carros[0]->init();
 
 	// enter GLUT event processing cycle

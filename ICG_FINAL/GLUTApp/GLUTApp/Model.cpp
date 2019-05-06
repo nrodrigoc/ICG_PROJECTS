@@ -218,3 +218,4 @@ void Model::renderTheModel()				//Here's where we do all the drawing
 	recursive_render(scene, scene->mRootNode, 0.35);
 	glDisable(GL_TEXTURE_2D);
 }
+

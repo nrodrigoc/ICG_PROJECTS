@@ -1,8 +1,11 @@
 ﻿  main.cpp
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(49): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(82): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(97): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(252): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(308): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(308): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(51): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(89): warning C4018: '<': signed/unsigned mismatch
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(102): warning C4018: '<': signed/unsigned mismatch
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(119): warning C4018: '<': signed/unsigned mismatch
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(276): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(339): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(339): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(352): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(352): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
   GLUTApp.vcxproj -> C:\Users\nrodrigo\Documents\GitHub\ICG_PROJECTS\ICG_FINAL\GLUTApp\Debug\GLUTApp.exe
