@@ -21,12 +21,12 @@ int mainWindow;
 int w, h;
 
 //Lights
-PointLight pointlight(0, 5, 0);
+PointLight pointlight(0, 200, 0);
 SpotLight spotlight;
-GLfloat globalAmbient = 0.4f;
+GLfloat globalAmbient = 0.3f;
 
-//Camera
-Camera camera;
+//ID das texturas
+GLuint texture[6];
 
 //Models
 std::vector<Car*> carros;
@@ -38,6 +38,20 @@ int mainMenu;
 bool start = true;
 const void* font = GLUT_BITMAP_TIMES_ROMAN_24;
 
+
+void initTexture() {
+	glEnable(GL_DEPTH_TEST);
+	glGenTextures(6, texture);
+
+
+	loadTex(0, "Images/skybox_up.bmp", texture);
+	loadTex(1, "Images/skybox_down.bmp", texture);
+	loadTex(2, "Images/skybox_east.bmp", texture);
+	loadTex(3, "Images/skybox_west.bmp", texture);
+	loadTex(4, "Images/skybox_front.bmp", texture);
+	loadTex(5, "Images/skybox_back.bmp", texture);
+
+}
 
 void changeSize(int width, int heigth) {
 
@@ -135,101 +149,6 @@ void computeDir(float deltaAngle) {
 	lz = -cos(angle);
 }
 
-void DrawSkyBox(void)
-{
-	GLfloat fExtent = 15.0f;
-
-	glBegin(GL_QUADS);
-	//////////////////////////////////////////////
-	// Negative X
-	glTexCoord3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(-fExtent, -fExtent, fExtent);
-
-	glTexCoord3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(-fExtent, -fExtent, -fExtent);
-
-	glTexCoord3f(-1.0f, 1.0f, -1.0f);
-	glVertex3f(-fExtent, fExtent, -fExtent);
-
-	glTexCoord3f(-1.0f, 1.0f, 1.0f);
-	glVertex3f(-fExtent, fExtent, fExtent);
-
-
-	///////////////////////////////////////////////
-	//  Postive X
-	glTexCoord3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(fExtent, -fExtent, -fExtent);
-
-	glTexCoord3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(fExtent, -fExtent, fExtent);
-
-	glTexCoord3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(fExtent, fExtent, fExtent);
-
-	glTexCoord3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(fExtent, fExtent, -fExtent);
-
-
-	////////////////////////////////////////////////
-	// Negative Z 
-	glTexCoord3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(-fExtent, -fExtent, -fExtent);
-
-	glTexCoord3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(fExtent, -fExtent, -fExtent);
-
-	glTexCoord3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(fExtent, fExtent, -fExtent);
-
-	glTexCoord3f(-1.0f, 1.0f, -1.0f);
-	glVertex3f(-fExtent, fExtent, -fExtent);
-
-
-	////////////////////////////////////////////////
-	// Positive Z 
-	glTexCoord3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(fExtent, -fExtent, fExtent);
-
-	glTexCoord3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(-fExtent, -fExtent, fExtent);
-
-	glTexCoord3f(-1.0f, 1.0f, 1.0f);
-	glVertex3f(-fExtent, fExtent, fExtent);
-
-	glTexCoord3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(fExtent, fExtent, fExtent);
-
-
-	//////////////////////////////////////////////////
-	// Positive Y
-	glTexCoord3f(-1.0f, 1.0f, 1.0f);
-	glVertex3f(-fExtent, fExtent, fExtent);
-
-	glTexCoord3f(-1.0f, 1.0f, -1.0f);
-	glVertex3f(-fExtent, fExtent, -fExtent);
-
-	glTexCoord3f(1.0f, 1.0f, -1.0f);
-	glVertex3f(fExtent, fExtent, -fExtent);
-
-	glTexCoord3f(1.0f, 1.0f, 1.0f);
-	glVertex3f(fExtent, fExtent, fExtent);
-
-
-	///////////////////////////////////////////////////
-	// Negative Y
-	glTexCoord3f(-1.0f, -1.0f, -1.0f);
-	glVertex3f(-fExtent, -fExtent, -fExtent);
-
-	glTexCoord3f(-1.0f, -1.0f, 1.0f);
-	glVertex3f(-fExtent, -fExtent, fExtent);
-
-	glTexCoord3f(1.0f, -1.0f, 1.0f);
-	glVertex3f(fExtent, -fExtent, fExtent);
-
-	glTexCoord3f(1.0f, -1.0f, -1.0f);
-	glVertex3f(fExtent, -fExtent, -fExtent);
-	glEnd();
-}
 
 void drawSnowMan() {
 
@@ -303,10 +222,8 @@ void drawScene() {
 	spotlight.addlight();
 	glPopMatrix();
 
-	/*glPushMatrix();
-	glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
-	spotlight.draw();
-	glPopMatrix();*/
+	glStencilMask(0x00);
+	drawSkybox(texture);
 
 	// Draw ground
 	glPushMatrix();
@@ -330,7 +247,7 @@ void drawScene() {
 	glMultMatrixf(carros[0]->local);
 	carros[0]->draw();
 	glPopMatrix();
-
+	
 
 	// Desenha os "postes" do lado direito
 	for (int i = 0; i < 1; i++) {
@@ -562,6 +479,7 @@ int main(int argc, char **argv) {
 
 	carros[0]->init();
 
+	initTexture();
 	// enter GLUT event processing cycle
 	glutMainLoop();
 

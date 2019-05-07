@@ -18,11 +18,13 @@
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
+#include <SOIL2.h>
 
 #include "Model.h"
 #include "PointLight.h"
 #include "Spotlight.h"
 #include "Camera.h"
+#include "Skybox.h"
 #include "Car.h"
 
 

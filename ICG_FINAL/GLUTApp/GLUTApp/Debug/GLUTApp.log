@@ -1,15 +1,2 @@
-﻿  car.cpp
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\car.cpp(82): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\car.cpp(143): warning C4244: 'argument': conversion from 'const double' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\car.cpp(150): warning C4244: 'argument': conversion from 'const double' to 'GLfloat', possible loss of data
-  main.cpp
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(51): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(89): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(102): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(119): warning C4018: '<': signed/unsigned mismatch
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(276): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(339): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(339): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(352): warning C4244: 'argument': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\nrodrigo\documents\github\icg_projects\icg_final\glutapp\glutapp\main.cpp(352): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
-  GLUTApp.vcxproj -> C:\Users\nrodrigo\Documents\GitHub\ICG_PROJECTS\ICG_FINAL\GLUTApp\Debug\GLUTApp.exe
+﻿  Skybox.cpp
+  GLUTApp.vcxproj -> C:\Users\nrodrigo\Desktop\INFERNO\GLUTApp\Debug\GLUTApp.exe
