@@ -26,6 +26,7 @@
 #include "Camera.h"
 #include "Skybox.h"
 #include "Car.h"
+#include "CreateLamps.h"
 
 
 #endif // ! _LIBS_H_
