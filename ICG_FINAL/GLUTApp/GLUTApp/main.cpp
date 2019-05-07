@@ -22,7 +22,7 @@ int w, h;
 
 //Lights
 PointLight pointlight(0, 200, 0);
-SpotLight spotlight;
+CreateLamps *lamps = new CreateLamps(3);
 GLfloat globalAmbient = 0.3f;
 
 //ID das texturas
@@ -233,47 +233,14 @@ void drawScene() {
 	models[0]->renderTheModel();
 	glPopMatrix();
 	
-	/*GLfloat color[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, color);
-	glBegin(GL_QUADS);
-	glVertex3f(-100.0f, 0.f, -100.0f);
-	glVertex3f(-100.0f, 0.f, 100.0f);
-	glVertex3f(100.0f, 0.f, 100.0f);
-	glVertex3f(100.0f, 0.f, -100.0f);
-	glEnd();*/
-
 	//Draw Car Model
 	glPushMatrix();
 	glMultMatrixf(carros[0]->local);
 	carros[0]->draw();
 	glPopMatrix();
 	
+	lamps->Add();
 
-	// Desenha os "postes" do lado direito
-	for (int i = 0; i < 1; i++) {
-		for (int j = -3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i*10, 0, j*10.0);
-			glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
-			glRotatef(100.f, -5.0, -10, 0);
-			spotlight.draw();
-			//drawSnowMan();
-			glPopMatrix();
-		}
-	}
-
-	// Desenha os "postes" do lado esquerdo
-	for (int i = 0; i < 1; i++) {
-		for (int j = -3; j < 3; j++) {
-			glPushMatrix();
-			glTranslatef(i * 10, 0, j*10.0);
-			glTranslatef(spotlight.position[0]*(-1), spotlight.position[1], spotlight.position[2]);
-			glRotatef(100.f, -5.0, 10, 0);
-			spotlight.draw();
-			//drawSnowMan();
-			glPopMatrix();
-		}
-	}
 }
 
 
