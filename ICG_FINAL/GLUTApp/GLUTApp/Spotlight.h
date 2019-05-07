@@ -7,17 +7,13 @@ Spotlight object handling position, target and other lighting properties.
 */
 class SpotLight {
 public:
-	GLfloat position[4] = { -1.0f, 2.0f, 0.0f , 1.0f };
-	GLfloat target[3] = { 0.1f, 0.0f, 0.0f };
-	GLfloat color[3] = { 1.0f, 1.0f, 1.0f };
-	GLfloat cutoff = 30.0f;
-	GLfloat exponent = 0.0f;
+	GLfloat position[4];
+	GLfloat direction[3];
+	
 
 	SpotLight();
 	void addlight();
 	void draw();
-	void disable();
-	void enable();
 	~SpotLight() = default;
 private:
 	void normalize(const GLfloat* vec, GLfloat* output);
