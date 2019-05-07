@@ -19,9 +19,7 @@ void CreateLamps::Add() {
 
 	
 	std::vector<SpotLight>::iterator it = lamp.begin();
-	SpotLight s = lamp[0];
-	SpotLight s1 = lamp[1];
-
+	
 	while (it != lamp.end())
 	{
 
@@ -36,6 +34,4 @@ void CreateLamps::Add() {
 		
 	}
 
-	s.addlight();
-	s.draw();
 }
