@@ -442,7 +442,7 @@ int main(int argc, char **argv) {
 
 
 	pointlight.enable();
-	spotlight.enable();
+	
 
 	carros[0]->init();
 
