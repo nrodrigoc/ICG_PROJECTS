@@ -217,11 +217,6 @@ void drawScene() {
 	pointlight.addLight();
 	glPopMatrix();
 
-	glPushMatrix();
-	glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
-	spotlight.addlight();
-	glPopMatrix();
-
 	glStencilMask(0x00);
 	drawSkybox(texture);
 
