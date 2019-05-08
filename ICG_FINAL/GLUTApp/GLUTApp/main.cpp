@@ -21,7 +21,7 @@ int mainWindow;
 int w, h;
 
 //Lights
-PointLight pointlight(0, 200, 0);
+PointLight pointlight(100, 200, -500);
 CreateLamps *lamps = new CreateLamps(3);
 GLfloat globalAmbient = 0.3f;
 
