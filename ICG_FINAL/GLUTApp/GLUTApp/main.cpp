@@ -3,6 +3,7 @@
 using namespace std;
 
 #define RED_CAR "Objects/carrinho2.obj"
+#define BLUE_CAR "Objects/carrinho.obj"
 #define PISTA "Objects/pista.obj"
 
 // angle of rotation for the camera direction
