@@ -120,7 +120,7 @@ void Car::updateCameraHoriMovement() {
 
 	if (isWPressing) {
 		dz += 0.25 * moveSpeed;
-		(moveSpeed < 3.5f) ? moveSpeed += 0.002f : moveSpeed = 3.5f;
+		(moveSpeed < 2.5f) ? moveSpeed += 0.002f : moveSpeed = 2.5f;
 	}
 	if (isSPressing)
 		dz -= 0.05;

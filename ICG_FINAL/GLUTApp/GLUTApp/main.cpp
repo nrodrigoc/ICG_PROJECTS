@@ -12,11 +12,6 @@ float angle = 0.0f, angleM = 0.f;
 float lx = 0.0f, lz = -1.0f;
 // XZ position of the camera
 float x = 0.0f, y = 1.f, z = 5.0f;
-// the key states. These variables will be zero
-//when no key is being presses
-float deltaAngle = 0.f;
-float deltaMove = 0;
-int xOrigin = -1;
 
 int mainWindow;
 int w, h;
@@ -137,20 +132,6 @@ void deleteModels() {
 	delete models[0];
 }
 
-void computePos(float deltaMove)
-{
-	x += deltaMove * lx * 0.1f;
-	z += deltaMove * lz * 0.1f;
-}
-
-void computeDir(float deltaAngle) {
-
-	angle += deltaAngle;
-	lx = sin(angle);
-	lz = -cos(angle);
-}
-
-
 void drawSnowMan() {
 
 	glPushMatrix();
@@ -246,12 +227,6 @@ void display(void) {
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	glClearDepth(1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-
-	if (deltaMove)
-		computePos(deltaMove);
-	if (deltaAngle)
-		computeDir(deltaAngle);
 
 	// Reset transformations
 	glLoadIdentity();
