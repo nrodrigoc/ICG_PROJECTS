@@ -1,23 +1,39 @@
 #include "SpotLight.h"
 
-SpotLight::SpotLight() :position{ -5.0f, 2.5f, 0.0f , 1.0f },
-						target{ 1.0f, 0.0f, 1.0f },
-						color{ 1.0f, 1.0f, 1.0f },
-						cutoff(30.0f),
-						exponent(0.0f) {}
+using namespace std;
+
+GLfloat target[3] = { 0.0f, 0.0f, 0.0f };
+GLfloat color[3] = { 1.0f, 1.0f, 1.0f };
+GLfloat cutoff(5.0f);
+GLfloat exponent(15.0f);
+
+SpotLight::SpotLight(GLfloat x, GLfloat y, GLfloat z, GLfloat w) {
+
+	position[0] = x;
+	position[1] = y;
+	position[2] = z;
+	position[3] = w;
+
+	direction[0] = target[0] - position[0];
+	direction[1] = target[1] - position[1];
+	direction[2] = (target[2] - position[2]);
+
+
+}
+
 
 void SpotLight::addlight() {
-	if (!glIsEnabled(GL_LIGHT1))
-		return;
+
+	glEnable(GL_LIGHT1);
+
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, color);
 	glLightfv(GL_LIGHT1, GL_SPECULAR, color);
 	glLightfv(GL_LIGHT1, GL_POSITION, position);
-	GLfloat direction[3] = { target[0] - position[0],
-							 target[1] - position[1],
-							 target[2] - position[2] };
+
 	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, direction);
 	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, cutoff);
 	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, exponent);
+
 }
 
 void SpotLight::draw() {
@@ -52,16 +68,6 @@ void SpotLight::draw() {
 	glPopMatrix();
 }
 
-void SpotLight::disable()
-{
-	glDisable(GL_LIGHT1);
-}
-
-void SpotLight::enable()
-{
-	glEnable(GL_LIGHT1);
-}
-
 void SpotLight::normalize(const GLfloat* vec, GLfloat* output)
 {
 	GLfloat length = sqrtf(vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2]);
@@ -79,8 +85,8 @@ void SpotLight::cross(const GLfloat* vec1, const GLfloat* vec2, GLfloat * output
 void SpotLight::lookAt(GLfloat* eye, GLfloat* center, GLfloat* up)
 {
 	GLfloat f[3] = { center[0] - eye[0],
-		         center[1] - eye[1],
-			 center[2] - eye[2] };
+				     center[1] - eye[1],
+					 center[2] - eye[2] };
 
 	normalize(f, f);
 	GLfloat u[3];
@@ -90,4 +96,11 @@ void SpotLight::lookAt(GLfloat* eye, GLfloat* center, GLfloat* up)
 	normalize(s, s);
 	cross(s, f, u);
 	normalize(u, u);
+
+}
+
+void SpotLight::SetPosition(glm::vec4 nPosition) {
+	position[0] = nPosition[0];
+	position[1] = nPosition[1];
+	position[2] = nPosition[2];
 }
