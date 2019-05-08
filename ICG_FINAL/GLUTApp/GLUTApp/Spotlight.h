@@ -11,7 +11,7 @@ public:
 	GLfloat direction[3];
 	
 
-	SpotLight();
+	SpotLight(GLfloat x, GLfloat y, GLfloat z, GLfloat w);
 	void addlight();
 	void draw();
 	~SpotLight() = default;
