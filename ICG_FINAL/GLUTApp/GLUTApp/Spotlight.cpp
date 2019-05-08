@@ -98,9 +98,3 @@ void SpotLight::lookAt(GLfloat* eye, GLfloat* center, GLfloat* up)
 	normalize(u, u);
 
 }
-
-void SpotLight::SetPosition(glm::vec4 nPosition) {
-	position[0] = nPosition[0];
-	position[1] = nPosition[1];
-	position[2] = nPosition[2];
-}
