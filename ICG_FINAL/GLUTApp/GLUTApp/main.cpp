@@ -81,7 +81,7 @@ void changeSize(int width, int heigth) {
 
 	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
-		
+
 	glLoadIdentity();
 }
 
@@ -212,6 +212,11 @@ void renderBitmapString(float x, float y, void *font, const char *string) {
 
 void drawScene() {
 
+	glPushMatrix();
+	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
+	pointlight.addLight();
+	glPopMatrix();
+
 	glStencilMask(0x00);
 	drawSkybox(texture);
 
@@ -222,13 +227,13 @@ void drawScene() {
 	glRotatef(180.f, 0, 1, 0);
 	models[0]->renderTheModel();
 	glPopMatrix();
-	
+
 	//Draw Car Model
 	glPushMatrix();
 	glMultMatrixf(carros[0]->local);
 	carros[0]->draw();
 	glPopMatrix();
-	
+
 	lamps->Add();
 
 }
@@ -432,7 +437,7 @@ int main(int argc, char **argv) {
 
 
 	pointlight.enable();
-	
+
 
 	carros[0]->init();
 
