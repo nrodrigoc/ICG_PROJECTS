@@ -212,16 +212,6 @@ void renderBitmapString(float x, float y, void *font, const char *string) {
 
 void drawScene() {
 
-	glPushMatrix();
-	glTranslatef(pointlight.position[0], pointlight.position[1], pointlight.position[2]);
-	pointlight.addLight();
-	glPopMatrix();
-
-	glPushMatrix();
-	glTranslatef(spotlight.position[0], spotlight.position[1], spotlight.position[2]);
-	spotlight.addlight();
-	glPopMatrix();
-
 	glStencilMask(0x00);
 	drawSkybox(texture);
 
